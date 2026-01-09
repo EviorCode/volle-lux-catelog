@@ -16,10 +16,9 @@ const siteUrl =
   process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
 
 export const metadata: Metadata = {
-  title:
-    "Wholesale Packaging UK | B2B Bulk Order Quote | Corporate Packaging Supplies",
+  title: "B2B Packaging Supplies UK: Wholesale Bubble Wrap Supplier",
   description:
-    "Request a custom quote for wholesale packaging supplies in the UK. Bulk pricing for businesses. Competitive rates on large orders of bubble wrap, boxes, and packaging materials. Next day delivery available.",
+    "Get a B2B account to access wholesale packaging supplies UK. Buy bubble wrap online UK, eco-friendly packaging, bulk pricing & fast business delivery.",
   keywords: [
     "wholesale packaging UK",
     "B2B packaging",
@@ -34,11 +33,14 @@ export const metadata: Metadata = {
     "bulk order packaging",
     "wholesale packaging prices",
     "business packaging solutions",
+    "buy bubble wrap online UK",
+    "bubble wrap rolls bulk",
+    "eco-friendly packaging UK",
   ],
   openGraph: {
-    title: "Wholesale Packaging UK | B2B Bulk Order Quote | Bubble Wrap Shop",
+    title: "B2B Packaging Supplies UK: Wholesale Bubble Wrap Supplier",
     description:
-      "Request a custom quote for wholesale packaging supplies in the UK. Bulk pricing for businesses. Competitive rates on large orders.",
+      "Get a B2B account to access wholesale packaging supplies UK. Buy bubble wrap online UK, eco-friendly packaging, bulk pricing & fast business delivery.",
     url: `${siteUrl}/b2b-request`,
   },
   alternates: {
@@ -78,9 +80,9 @@ export default function B2BRequestPage() {
 
           {/* Page Header */}
           <div className="mb-12 md:mb-16 text-center">
-            <div className="flex items-center justify-center gap-2 mb-4 text-emerald-600">
-              <Briefcase className="h-6 w-6" />
-              <span className="text-sm font-semibold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-50 to-emerald-50 border border-emerald-400 rounded-full">
+              <Briefcase className="w-5 h-5 text-emerald-600" />
+              <span className="text-sm font-semibold text-emerald-700">
                 B2B Solutions
               </span>
             </div>
@@ -94,18 +96,61 @@ export default function B2BRequestPage() {
             </p>
           </div>
 
+          {/* Why a B2B Account Matters Section */}
+          <div className="mb-12 relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-600 p-8 md:p-10 shadow-xl">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3" />
+            <div className="relative">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
+                Why a B2B Account Matters?
+              </h2>
+              <p className="text-base leading-relaxed text-white md:text-lg mb-4">
+                A B2B account with Bubble Wrap Shop provides businesses with easy
+                access to high-quality, affordable packaging solutions in the UK
+                for use when volume and repeat purchases are needed. Whatever your
+                regular group of purchasing bubble wraps on the internet in the
+                UK, or would like to have bubble wrap rolls in bulk, or need to
+                make sure you can always have access to the protective wrapping
+                when shipping UK, a specific B2B arrangement will give you
+                improved pricing, first-dry access to bubble wrap, and easier
+                order management.
+              </p>
+              <p className="text-base leading-relaxed text-white/90 md:text-lg">
+                We are a professional wholesale bubble wrap
+                supplier in the UK and offer scalable solutions, eco-friendly and
+                reliable UK delivery, and a solution that helps you cut packaging
+                costs while maintaining quality and efficiency throughout your
+                operations.
+              </p>
+            </div>
+          </div>
+
           {/* Link to Wholesale Page */}
-          <div className="mb-8 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
-            <p className="text-sm text-gray-700 mb-2">
-              <strong>New to wholesale?</strong> Learn more about our bulk
-              pricing, benefits, and how it works.
-            </p>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/wholesale">
-                Visit Wholesale Information Page
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+          <div className="mb-12 relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 via-white to-emerald-50 p-8 border border-emerald-300 shadow-lg">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+                  New to Wholesale?
+                </h3>
+                <p className="text-base text-gray-700 leading-relaxed">
+                  Learn more about our bulk pricing, benefits, and how our wholesale program works for your business.
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <Button asChild variant="ghost" aria-label="Wholesale Information" className="group p-0 h-auto hover:bg-transparent">
+                  <Link
+                    href="/wholesale"
+                    className="relative overflow-hidden inline-flex items-center gap-3 px-6 py-3 text-white font-semibold text-white bg-emerald-600 rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-100"
+                  >
+                    <span className="absolute inset-0 bg-emerald-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <span className="relative">Visit Wholesale Page</span>
+                    <ArrowRight
+                      className="relative h-5 w-5 transition-transform group-hover:translate-x-1"
+                      strokeWidth={2.5}
+                    />
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Benefits Section */}
@@ -164,14 +209,14 @@ export default function B2BRequestPage() {
               Have questions?{" "}
               <Link
                 href="/contact"
-                className="text-emerald-600 hover:text-emerald-700 font-semibold underline"
+                className="text-emerald-800 hover:text-emerald-700 font-semibold underline"
               >
                 Contact our sales team
               </Link>{" "}
               or call us at{" "}
               <a
                 href="tel:01254916167"
-                className="text-emerald-600 hover:text-emerald-700 font-semibold"
+                className="text-emerald-800 hover:text-emerald-700 font-semibold"
               >
                 01254 916167
               </a>

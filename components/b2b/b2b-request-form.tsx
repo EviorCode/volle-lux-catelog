@@ -682,8 +682,8 @@ export function B2BRequestForm() {
               value={formData.budgetRange || ""}
               onValueChange={(value) => handleSelectChange("budgetRange", value)}
             >
-              <SelectTrigger className="h-11">
-                <SelectValue placeholder="Select budget range" />
+              <SelectTrigger aria-label="Select budget range" className="h-11">
+                <SelectValue placeholder="Select budget range"/>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="£500-£1,000">£500 - £1,000</SelectItem>
@@ -914,7 +914,7 @@ export function B2BRequestForm() {
                 handleSelectChange("deliveryAddress.country", value)
               }
             >
-              <SelectTrigger className={`h-11 ${
+              <SelectTrigger aria-label="Select Country" className={`h-11 ${
                 errors.deliveryAddress?.country
                   ? "border-red-500 focus-visible:ring-red-500"
                   : ""
