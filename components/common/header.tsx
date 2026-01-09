@@ -127,6 +127,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 alt="Logo"
                 width={100}
                 height={32}
+                priority
                 className="h-10 w-auto transition-transform duration-300 group-hover:scale-105"
               />
             </Link>
