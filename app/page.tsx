@@ -23,30 +23,24 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk
  */
 export const metadata: Metadata = {
   title:
-    "Packaging Supplies UK | Bubble Wrap, Boxes & Wholesale Packaging | Bubble Wrap Shop",
+    "Packaging Supplies UK: Bubble Wrap, Boxes & Eco Packaging",
   description:
-    "UK's leading supplier of packaging supplies. Buy bubble wrap, cardboard boxes, packing tape, and protective packaging materials online. Wholesale pricing available. Next day delivery across the UK. Serving both businesses and consumers.",
+    "Create your bubble-wrapped purchase in the U.K. through a reputable wholesale bubble wrap distributor. Bubble wrap UK, packaging mailing bags wholesale UK.",
   keywords: [
-    "packaging supplies UK",
-    "bubble wrap UK",
-    "packaging boxes UK",
-    "wholesale packaging UK",
-    "bulk packaging supplies",
-    "cardboard boxes UK",
-    "packing tape UK",
-    "shipping boxes UK",
-    "protective packaging UK",
-    "next day delivery packaging",
-    "UK packaging supplier",
-    "B2B packaging UK",
-    "corporate packaging supplies",
-    "eco-friendly packaging UK",
-    "packaging materials UK",
-    "bubble wrap online",
-    "cheap packaging supplies",
-    "packaging wholesale",
-    "Blackburn packaging supplier",
-    "Lancashire packaging",
+    "Packaging supplies UK",
+    "Buy bubble wrap online UK",
+    "Wholesale bubble wrap supplier UK",
+    "Eco-friendly bubble wrap UK",
+    "Protective packaging for shipping UK",
+    "Bubble wrap rolls wholesale UK",
+    "Cheap bubble wrap UK supplier",
+    "Anti-static bubble wrap UK",
+    "Foam packaging rolls UK",
+    "Stretch film wrap UK",
+    "Edge protection packaging UK",
+    "Fragile tape UK",
+    "Mailing bags wholesale UK",
+    "Bubble wrap UK",
   ],
   openGraph: {
     title:
@@ -153,7 +147,7 @@ export default function Home() {
   const websiteStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Bubble Wrap Shop - Premium Packaging Supplies",
+    name: "Bubble Wrap Shop",
     url: siteUrl,
     potentialAction: {
       "@type": "SearchAction",

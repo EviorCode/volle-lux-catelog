@@ -1,8 +1,9 @@
+
 import Link from "next/link";
 import { Mail, Phone, MapPin, Leaf } from "lucide-react";
 import Image from "next/image";
 
-export function Footer() {
+export function  aFooter() {
   return (
     <footer className="relative bg-linear-to-br from-emerald-950 to-teal-950 text-white overflow-hidden">
       {/* Decorative Elements */}
@@ -234,26 +235,26 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="mt-16 border-t border-emerald-800/50 pt-8">
           <div className="flex flex-col items-center justify-between gap-4 text-center md:flex-row md:text-left">
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-300">
               © {new Date().getFullYear()} Bubble wrap shop (Blackburn) Limited. All
               rights reserved.
             </p>
             <div className="flex gap-6 text-sm">
               <Link
                 href="/privacy"
-                className="text-gray-400 transition-colors hover:text-emerald-400"
+                className="text-gray-300 transition-colors hover:text-emerald-400"
               >
                 Privacy
               </Link>
               <Link
                 href="/terms"
-                className="text-gray-400 transition-colors hover:text-emerald-400"
+                className="text-gray-300 transition-colors hover:text-emerald-400"
               >
                 Terms
               </Link>
               <Link
                 href="/sustainability"
-                className="text-gray-400 transition-colors hover:text-emerald-400"
+                className="text-gray-300 transition-colors hover:text-emerald-400"
               >
                 Sustainability
               </Link>

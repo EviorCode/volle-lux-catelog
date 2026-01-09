@@ -19,11 +19,11 @@ export default async function HeroSection() {
               <div className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-xl sm:rounded-2xl bg-linear-to-br from-emerald-600 to-teal-600 flex items-center justify-center mb-3 sm:mb-4 md:mb-5 group-hover:scale-110 group-active:scale-95 transition-transform shadow-lg">
                 <Truck className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2">
-                Fast Delivery
-              </h3>
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2">
+                Fast UK Delivery
+              </h2>
               <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-relaxed">
-                Express shipping in 2-3 business days
+                Order and have delivered within 2 or 3 days.
               </p>
             </div>
           </div>
@@ -33,11 +33,11 @@ export default async function HeroSection() {
               <div className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-xl sm:rounded-2xl bg-linear-to-br from-emerald-600 to-teal-600 flex items-center justify-center mb-3 sm:mb-4 md:mb-5 group-hover:scale-110 group-active:scale-95 transition-transform shadow-lg">
                 <BicepsFlexed className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2">
                 Quality Assured
-              </h3>
+              </h2>
               <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-relaxed">
-                100% satisfaction guarantee
+                Every product in terms of durability and performance.
               </p>
             </div>
           </div>
@@ -47,11 +47,11 @@ export default async function HeroSection() {
               <div className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-xl sm:rounded-2xl bg-linear-to-br from-emerald-600 to-teal-600 flex items-center justify-center mb-3 sm:mb-4 md:mb-5 group-hover:scale-110 group-active:scale-95 transition-transform shadow-lg">
                 <Sprout className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2">
-                Eco-Friendly
-              </h3>
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2">
+                Eco-Friendly Packaging
+              </h2>
               <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-relaxed">
-                Sustainable materials and practices
+                Eco-friendly bubble wrap UK, recyclable materials.
               </p>
             </div>
           </div>

@@ -18,11 +18,11 @@ export async function CategoryGrid() {
         {/* Section Header */}
         <div className="text-center mb-12 md:mb-16 lg:mb-20">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4">
-            Shop by
-            <span className="block text-white mt-2">Category</span>
+            SHOP BY
+            <span className="block text-white mt-2">CATEGORY</span>
           </h2>
           <p className="mt-4 text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
-            Browse our complete range of packaging supplies including bubble wrap, cardboard boxes, packing tape, shipping boxes, and protective packaging. Next day delivery packaging supplies UK available for all orders.
+            Our entire selection of protective packaging shipping UK systems also includes e-commerce, warehousing, logistics, and retail businesses. Our wholesale package selection, consisting of lightweight mailing solutions to heavy-duty protection, provides the safety of your goods.
           </p>
         </div>
 

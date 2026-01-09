@@ -108,7 +108,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     )}
                   </>
                 ) : (
-                  <span className="text-sm font-medium text-emerald-600 group-hover:text-white italic">
+                  <span className="text-sm font-medium text-emerald-900 group-hover:text-white italic">
                     Open to view prices
                   </span>
                 )}

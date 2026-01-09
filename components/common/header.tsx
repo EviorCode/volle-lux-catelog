@@ -264,7 +264,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
 
               {/* Cart */}
               <MiniCart>
-                <button className="relative p-2 text-white hover:bg-white/10 rounded-lg transition-all duration-300 group">
+                <button aria-label="View shopping cart" className="relative p-2 text-white hover:bg-white/10 rounded-lg transition-all duration-300 group">
                   <ShoppingCart
                     className="h-5 w-5 group-hover:scale-110 transition-transform"
                     strokeWidth={2}
@@ -279,6 +279,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
 
               {/* Mobile Menu */}
               <button
+                aria-label="Open navigation menu"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2 lg:hidden text-white hover:bg-white/10 rounded-lg transition-all"
               >

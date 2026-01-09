@@ -1,11 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Search,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -84,7 +80,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
           {/* Slides */}
           {banners.map((banner, index) => {
             const isVideo = banner.mediaType === "video" && banner.video;
-            
+
             return (
               <div
                 key={banner.id}
@@ -199,16 +195,53 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
       {/* Search & Info Section */}
       <div className="relative z-10 mx-auto max-w-6xl px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12 lg:py-16 xl:py-20">
         {/* Heading */}
-        <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-5 lg:mb-6 leading-tight">
-            Packaging Supplies UK
-            <span className="block bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mt-1 sm:mt-2">
-              Bubble Wrap, Boxes & More
+        <div className="relative text-center mb-12 sm:mb-16 md:mb-20 px-4">
+
+          <h1
+            className="font-extrabold tracking-tight text-gray-900 leading-tight
+                 text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6"
+          >
+            BUBBLE WRAP,{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-600">
+              BOXES & MORE
             </span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto font-light px-2 sm:px-0">
-            Premium eco-friendly packaging supplies including bubble wrap, cardboard boxes, packing tape, shipping boxes, and protective packaging materials. Next day delivery packaging supplies UK. Buy packaging supplies online with automatic bulk pricing.
-          </p>
+
+          <div className="space-y-6 max-w-4xl mx-auto">
+            {/* <p
+              className="text-gray-600 font-light leading-relaxed
+                  text-base sm:text-lg md:text-xl lg:text-2xl"
+            >
+              Order bubble wrap in the UK via a reputable bubble wrap supplier
+              in the UK with high-quality packaging and at affordable costs. Our
+              offering includes eco-friendly bubble wrap UK, cardboard boxes,
+              mailing bags wholesale UK, tapes, and shipping protection
+              packaging UK, all trusted by businesses in the UK.
+            </p> */}
+
+            <p
+              className="text-gray-600 font-light leading-relaxed
+                  text-base sm:text-lg md:text-xl lg:text-2xl"
+            >
+              You need a large volume of bubble wrap to dispatch, or you are
+              just trying to find a cheap supplier of bubble wrap UK without
+              compromising on quality, then we have you covered. Our packaging
+              is tailored to provide security to the goods when they are stored,
+              handled, or in transit.
+            </p>
+
+            <p
+              className="text-gray-700 font-medium
+                  text-base sm:text-lg md:text-xl lg:text-2xl"
+            >
+              When customers buy online, they enjoy{" "}
+              <span className="text-emerald-600 font-semibold">
+                next-day delivery, automatic bulk pricing, and wholesale rates.
+              </span>
+            </p>
+          </div>
+
+
         </div>
 
         {/* Search Bar - Improved Mobile UI */}
@@ -217,14 +250,14 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
             <div className="relative group">
               {/* Glow Effect */}
               <div className="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl blur-lg opacity-20 group-hover:opacity-30 transition-opacity" />
-              
+
               {/* Search Container */}
               <div className="relative bg-white rounded-2xl shadow-xl border-2 border-emerald-100 hover:border-emerald-300 transition-colors overflow-hidden">
                 {/* Input Wrapper */}
                 <div className="flex items-center gap-3 px-4 sm:px-6">
                   {/* Search Icon */}
                   <Search className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600 flex-shrink-0" />
-                  
+
                   {/* Input Field */}
                   <input
                     type="search"
@@ -233,7 +266,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="flex-1 py-4 sm:py-5 text-base sm:text-lg text-gray-900 placeholder:text-gray-400 focus:outline-none bg-transparent min-w-0"
                   />
-                  
+
                   {/* Search Button */}
                   <button
                     type="submit"
@@ -250,4 +283,3 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
     </div>
   );
 }
-

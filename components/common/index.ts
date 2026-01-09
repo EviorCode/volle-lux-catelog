@@ -1,5 +1,5 @@
 export { Header } from "./header";
-export { Footer } from "./footer";
+export { aFooter } from "./footer";
 export { Breadcrumbs } from "./breadcrumbs";
 export { ErrorBoundary } from "./ErrorBoundary";
 // Note: AnnouncementBannerWrapper and SanityLiveWrapper are NOT exported here

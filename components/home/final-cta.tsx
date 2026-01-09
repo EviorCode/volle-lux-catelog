@@ -9,27 +9,27 @@ export function FinalCTA() {
         <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
           {/* Heading */}
           <h2 className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-            Explore Our Complete
-            <span className="block mt-2 text-white">Product Catalog</span>
+            EXPLORE OUR COMPLETE
+            <span className="block mt-2 text-white">PRODUCT CATELOG</span>
           </h2>
 
           {/* Description */}
           <p className="mb-10 text-base md:text-lg lg:text-xl text-white/80 max-w-2xl leading-relaxed lg:mb-12">
-            Discover our full range of packaging supplies including bubble wrap, cardboard boxes, packing tape, shipping boxes, and protective packaging materials. From eco-friendly materials to custom packaging options. Bulk pricing available on all products. Next day delivery packaging supplies UK. Buy packaging supplies online with wholesale pricing available.{" "}
+            Buy the complete selection of packaging materials UK, including low-cost, cheap bubble wrap UK supplier, to high-quality protective products. It depends on whether you need to purchase bubble wrap rolls wholesale UK, mailing bags in wholesale UK, or stretch film wrap in wholesale UK. You can count on us to deliver reliable products, prices, and delivery.{" "}
             <Link
               href="/blog"
-              className="underline hover:text-white font-medium"
+              className="underline text-black hover:text-white font-medium"
             >
-              Read our packaging guides
+              Browse our buying guides
             </Link>{" "}
-            or{" "}
+            and{" "}
             <Link
               href="/guides"
-              className="underline hover:text-white font-medium"
+              className="underline text-black hover:text-white font-medium"
             >
-              browse buying guides
+              packaging guides
             </Link>{" "}
-            to find the perfect solution.
+            to find the right solution for your business.
           </p>
 
           {/* CTA Button */}

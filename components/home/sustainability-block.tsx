@@ -29,21 +29,18 @@ export function SustainabilityBlock() {
           <div className="order-1 lg:order-2 lg:pl-8 xl:pl-12">
             <div className="max-w-xl">
               <h2 className="mb-6 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">
-                Building a
+                BUILDING A
                 <span className="block text-white mt-2">
-                  Sustainable Future
+                  SUSTAINABLE FUTURE
                 </span>
               </h2>
 
               <p className="mb-6 text-lg sm:text-xl text-gray-300 leading-relaxed">
-                We&apos;re committed to reducing environmental impact through
-                eco-friendly materials, recyclable packaging, and sustainable
-                manufacturing processes.
+                We will also strive to provide UK based bubble wrap that is eco-friendly and sustainable packaging materials that do not negatively impact the environment but enable a high level of protection and performance.
               </p>
 
               <p className="mb-8 text-lg sm:text-xl text-gray-300 leading-relaxed">
-                Every product in our sustainable range meets strict
-                environmental standards, ensuring quality without compromise.
+                With our recyclable products and responsibly sourced products, the business organization achieves sustainability and also enjoys strong and sustainable protective packaging in shipping the products in the UK.
               </p>
 
               {/* Sustainability Features */}

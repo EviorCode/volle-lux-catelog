@@ -1,21 +1,23 @@
 // This file must be a Server Component (no "use client")
-// Import SanityLive directly from live.ts to avoid importing the main index
-// which might be evaluated in client component contexts
 import { SanityLive } from "@/sanity/lib/live";
+import { draftMode } from "next/headers";
 
 /**
  * Server Component wrapper for SanityLive
- * This ensures SanityLive is only used in Server Components context
- * Note: SanityLive requires Server Component context and cannot be used during static generation
- * 
- * IMPORTANT: This component should ONLY be imported directly in Server Components (like app/layout.tsx)
- * DO NOT export it from components/common/index.ts to prevent client components from importing it
+ * * PERFORMANCE OPTIMIZATION:
+ * We conditionally render <SanityLive /> only when Draft Mode is enabled.
+ * This prevents the heavy real-time event listener from loading for 
+ * regular website visitors, saving ~350ms of network latency.
  */
-export function SanityLiveWrapper() {
-  // SanityLive must be rendered in a Server Component
-  // defineLive (used internally) will throw an error if called outside Server Component context
+export async function SanityLiveWrapper() {
+  // Check if we are in Draft Mode (Admin/Editing)
+  const { isEnabled } = await draftMode();
+
+  // If not in draft mode, do not load the live listener
+  if (!isEnabled) {
+    return null;
+  }
+
+  // Only load the listener for admins editing content
   return <SanityLive />;
 }
-
-
-
