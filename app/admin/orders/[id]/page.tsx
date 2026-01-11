@@ -1,18 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Download,
-  Package,
-  Truck,
-  CreditCard,
-  ArrowLeft,
-  Save,
-  ExternalLink,
-} from "lucide-react";
+import { Package, Truck, CreditCard, ArrowLeft, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -30,7 +22,6 @@ import { CartItem } from "@/types/cart";
 
 export default function AdminOrderDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const orderId = params.id as string;
 
   const [order, setOrder] = useState<AdminOrder | null>(null);
@@ -45,7 +36,8 @@ export default function AdminOrderDetailPage() {
 
   useEffect(() => {
     fetchOrder();
-  }, [orderId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // fetchOrder is intentionally not included to avoid infinite loops
 
   const fetchOrder = async () => {
     try {

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+
 import { ProductCard } from "./product-card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";

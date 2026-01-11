@@ -1,14 +1,12 @@
-'use client'
+"use client";
 
-import dynamic from 'next/dynamic'
-import { TrendingUp, Package, BarChart3, PieChart } from 'lucide-react'
-import type { AdminOrder } from '@/services/admin/order.service'
-import type { DashboardStats } from '@/services/admin/admin-server.service'
+import dynamic from "next/dynamic";
+import { TrendingUp, Package, BarChart3, PieChart } from "lucide-react";
 
 // Lazy-load heavy chart components
 const RevenueChart = dynamic(
   () =>
-    import('../revenue-chart').then((mod) => ({
+    import("../revenue-chart").then((mod) => ({
       default: mod.RevenueChart,
     })),
   {
@@ -17,11 +15,11 @@ const RevenueChart = dynamic(
       <div className="h-[400px] rounded-xl bg-emerald-50 animate-pulse" />
     ),
   }
-)
+);
 
 const OrdersStatusChart = dynamic(
   () =>
-    import('../orders-status-chart').then((mod) => ({
+    import("../orders-status-chart").then((mod) => ({
       default: mod.OrdersStatusChart,
     })),
   {
@@ -30,11 +28,11 @@ const OrdersStatusChart = dynamic(
       <div className="h-[400px] rounded-xl bg-emerald-50 animate-pulse" />
     ),
   }
-)
+);
 
 const TopProductsList = dynamic(
   () =>
-    import('../top-products-list').then((mod) => ({
+    import("../top-products-list").then((mod) => ({
       default: mod.TopProductsList,
     })),
   {
@@ -43,14 +41,9 @@ const TopProductsList = dynamic(
       <div className="h-[400px] rounded-xl bg-emerald-50 animate-pulse" />
     ),
   }
-)
+);
 
-interface AnalyticsTabProps {
-  orders: AdminOrder[]
-  stats: DashboardStats
-}
-
-export function AnalyticsTab({ orders, stats }: AnalyticsTabProps) {
+export function AnalyticsTab() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 md:p-8">
       <div className="max-w-[1600px] mx-auto space-y-4 sm:space-y-6 md:space-y-8">
@@ -58,7 +51,10 @@ export function AnalyticsTab({ orders, stats }: AnalyticsTabProps) {
         <div className="mb-4 sm:mb-6 md:mb-8">
           <div className="flex items-center gap-2 sm:gap-3 mb-4">
             <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg">
-              <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6 text-white" strokeWidth={2} />
+              <BarChart3
+                className="h-5 w-5 sm:h-6 sm:w-6 text-white"
+                strokeWidth={2}
+              />
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
@@ -75,9 +71,14 @@ export function AnalyticsTab({ orders, stats }: AnalyticsTabProps) {
         <div className="rounded-xl sm:rounded-2xl border border-gray-300 bg-white p-4 sm:p-6 shadow-lg">
           <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
             <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" strokeWidth={2} />
+              <TrendingUp
+                className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600"
+                strokeWidth={2}
+              />
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Revenue Overview</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+              Revenue Overview
+            </h2>
           </div>
           <div className="overflow-x-auto -mx-2 sm:mx-0">
             <RevenueChart />
@@ -90,7 +91,10 @@ export function AnalyticsTab({ orders, stats }: AnalyticsTabProps) {
           <div className="rounded-xl sm:rounded-2xl border border-gray-300 bg-white p-4 sm:p-6 shadow-lg">
             <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
               <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <PieChart className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" strokeWidth={2} />
+                <PieChart
+                  className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600"
+                  strokeWidth={2}
+                />
               </div>
               <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                 Order Status Distribution
@@ -105,9 +109,14 @@ export function AnalyticsTab({ orders, stats }: AnalyticsTabProps) {
           <div className="rounded-xl sm:rounded-2xl border border-gray-300 bg-white p-4 sm:p-6 shadow-lg">
             <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
               <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <Package className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" strokeWidth={2} />
+                <Package
+                  className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600"
+                  strokeWidth={2}
+                />
               </div>
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900">Top Products</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                Top Products
+              </h2>
             </div>
             <div className="overflow-x-auto -mx-2 sm:mx-0">
               <TopProductsList />
@@ -116,7 +125,5 @@ export function AnalyticsTab({ orders, stats }: AnalyticsTabProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-

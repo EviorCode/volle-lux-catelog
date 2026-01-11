@@ -5,6 +5,7 @@ import { useCartStore, cartStorageHelpers } from "@/lib/stores/cart-store";
 import { useAuth } from "@/components/auth/auth-provider";
 import { saveCartToSupabase } from "@/services/cart/cart.service";
 import { createClient } from "@/lib/supabase/client";
+import { Subscription } from "@supabase/supabase-js";
 
 /**
  * Cart Provider Component
@@ -16,10 +17,10 @@ import { createClient } from "@/lib/supabase/client";
  */
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, loading } = useAuth();
-  const { initializeCart, syncCart, items } = useCartStore();
+  const { initializeCart } = useCartStore();
   const prevIsAuthenticatedRef = useRef(isAuthenticated);
   const hasMigratedRef = useRef(false);
-  const subscriptionRef = useRef<any>(null);
+  const subscriptionRef = useRef<Subscription | null>(null);
 
   // Initialize cart when auth state changes
   useEffect(() => {
@@ -145,7 +146,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         console.log("Realtime subscription status:", status);
       });
 
-    subscriptionRef.current = subscription;
+    subscriptionRef.current = subscription as unknown as Subscription;
 
     // Cleanup on unmount or when auth changes
     return () => {

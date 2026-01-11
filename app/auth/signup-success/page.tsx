@@ -1,16 +1,15 @@
 "use client"
 
 import { Suspense, useEffect, useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle, ArrowRight, Loader2, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/components/auth/auth-provider'
 
 function SignupSuccessContent() {
-  const searchParams = useSearchParams()
   const router = useRouter()
-  const { user, loading, refreshUser } = useAuth()
+  const { user, refreshUser } = useAuth()
   const [isVerifying, setIsVerifying] = useState(true)
 
   useEffect(() => {

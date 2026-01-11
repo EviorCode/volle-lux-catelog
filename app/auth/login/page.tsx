@@ -45,7 +45,8 @@ export default function LoginPage() {
       } else {
         setError(result.error || "Failed to sign in");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Error signing in:", error);
       setError("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);

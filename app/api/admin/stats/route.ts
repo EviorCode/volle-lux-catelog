@@ -3,7 +3,7 @@
  * Returns dashboard statistics for admin
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/utils/admin-auth";
 import { getOrderStats } from "@/services/admin/order.service";
@@ -12,7 +12,7 @@ import { getOrderStats } from "@/services/admin/order.service";
  * GET /api/admin/stats
  * Fetch dashboard statistics
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Check admin authentication
     const supabase = await createServerSupabaseClient();

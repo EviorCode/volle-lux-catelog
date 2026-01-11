@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, ShoppingCart, Package, Truck, MapPin } from "lucide-react";
+import { Package, Truck, MapPin } from "lucide-react";
 import { getOrderById } from "@/services/orders/order.service";
 import { getCurrentUserServer } from "@/services/auth/auth-server.service";
 import { notFound } from "next/navigation";

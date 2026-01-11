@@ -5,7 +5,7 @@
  * Simple debounce function to reduce API calls
  * Waits for a specified delay before executing the function
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
@@ -27,7 +27,7 @@ export function debounce<T extends (...args: any[]) => any>(
  * Throttle function to limit execution frequency
  * Ensures function is called at most once per specified interval
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   interval: number
 ): (...args: Parameters<T>) => void {
@@ -61,20 +61,19 @@ export function throttle<T extends (...args: any[]) => any>(
  * Caches ongoing requests and returns the same promise
  */
 class RequestDeduplicator {
-  private pendingRequests = new Map<string, Promise<any>>();
+  private pendingRequests = new Map<string, Promise<unknown>>();
 
   async deduplicate<T>(key: string, requestFn: () => Promise<T>): Promise<T> {
     // Check if request is already in flight
     if (this.pendingRequests.has(key)) {
-      return this.pendingRequests.get(key)!;
+      return this.pendingRequests.get(key)! as Promise<T>;
     }
 
     // Create new request
-    const promise = requestFn()
-      .finally(() => {
-        // Clean up after request completes
-        this.pendingRequests.delete(key);
-      });
+    const promise = requestFn().finally(() => {
+      // Clean up after request completes
+      this.pendingRequests.delete(key);
+    });
 
     this.pendingRequests.set(key, promise);
     return promise;
@@ -117,7 +116,7 @@ export function optimisticUpdate<T>(
  * Useful for bulk add/remove operations
  */
 export class CartOperationBatcher {
-  private operations: Array<() => Promise<any>> = [];
+  private operations: Array<() => Promise<unknown>> = [];
   private batchTimeout: NodeJS.Timeout | null = null;
   private batchDelay: number;
 
@@ -125,7 +124,7 @@ export class CartOperationBatcher {
     this.batchDelay = delay;
   }
 
-  add(operation: () => Promise<any>) {
+  add(operation: () => Promise<unknown>) {
     this.operations.push(operation);
 
     // Reset batch timeout
@@ -163,4 +162,3 @@ export class CartOperationBatcher {
     return this.executeBatch();
   }
 }
-

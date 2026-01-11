@@ -1,6 +1,12 @@
 import { defineType, defineField } from "sanity";
 import { ImageIcon } from "lucide-react";
 
+// Type for banner document in validation context
+interface BannerDocument {
+  mediaType?: "image" | "video";
+  videoUrl?: string;
+}
+
 export const banner = defineType({
   name: "banner",
   title: "Banner",
@@ -17,7 +23,8 @@ export const banner = defineType({
     defineField({
       name: "description",
       title: "Banner Description",
-      description: "The subtitle or description text displayed below the title (optional)",
+      description:
+        "The subtitle or description text displayed below the title (optional)",
       type: "text",
       rows: 2,
       validation: (Rule) => Rule.max(500),
@@ -57,7 +64,8 @@ export const banner = defineType({
       hidden: ({ document }) => document?.mediaType !== "image",
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const mediaType = (context.document as any)?.mediaType;
+          const document = context.document as BannerDocument | undefined;
+          const mediaType = document?.mediaType;
           if (mediaType === "image" && !value) {
             return "Image is required when media type is set to image";
           }
@@ -68,15 +76,17 @@ export const banner = defineType({
       name: "backgroundVideo",
       title: "Background Video",
       type: "file",
-      description: "Video file for the banner (MP4, WebM recommended for best browser support)",
+      description:
+        "Video file for the banner (MP4, WebM recommended for best browser support)",
       options: {
         accept: "video/*",
       },
       hidden: ({ document }) => document?.mediaType !== "video",
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const mediaType = (context.document as any)?.mediaType;
-          const videoUrl = (context.document as any)?.videoUrl;
+          const document = context.document as BannerDocument | undefined;
+          const mediaType = document?.mediaType;
+          const videoUrl = document?.videoUrl;
           if (mediaType === "video" && !value && !videoUrl) {
             return "Either upload a video file or provide a video URL";
           }
@@ -87,7 +97,8 @@ export const banner = defineType({
       name: "videoUrl",
       title: "Video URL (Alternative)",
       type: "url",
-      description: "Or provide a direct URL to a hosted video file (e.g., from CDN)",
+      description:
+        "Or provide a direct URL to a hosted video file (e.g., from CDN)",
       hidden: ({ document }) => document?.mediaType !== "video",
     }),
     defineField({
@@ -132,7 +143,8 @@ export const banner = defineType({
           name: "muted",
           title: "Muted",
           type: "boolean",
-          description: "Play video without sound (required for autoplay in most browsers)",
+          description:
+            "Play video without sound (required for autoplay in most browsers)",
           initialValue: true,
         }),
         defineField({
@@ -180,7 +192,7 @@ export const banner = defineType({
     prepare({ title, subtitle, media, posterImage, mediaType, index }) {
       const isVideo = mediaType === "video";
       const displayMedia = isVideo ? posterImage : media;
-      
+
       return {
         title: title || `Banner ${index ?? 0}`,
         subtitle: `${isVideo ? "🎥 Video" : "🖼️ Image"} | Order: ${index ?? 0}${subtitle ? ` | ${subtitle}` : ""}`,

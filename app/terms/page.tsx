@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/common";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions - Bubble Wrap Shop UK",
+  description:
+    "Read our terms and conditions for purchasing packaging supplies from Bubble Wrap Shop UK. Clear policies on orders, delivery, returns, and wholesale accounts.",
+  openGraph: {
+    title: "Terms & Conditions | Bubble Wrap Shop",
+    description:
+      "Terms and conditions for purchasing packaging supplies from Bubble Wrap Shop UK.",
+    url: `${siteUrl}/terms`,
+  },
+  alternates: {
+    canonical: `${siteUrl}/terms`,
+  },
+};
 
 export default function TermsAndConditions() {
   return (

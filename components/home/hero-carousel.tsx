@@ -32,16 +32,13 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // If no banners, return empty state
-  if (!banners || banners.length === 0) {
-    return null;
-  }
-
   const nextSlide = useCallback(() => {
+    if (!banners || banners.length === 0) return;
     setCurrentSlide((prev) => (prev + 1) % banners.length);
-  }, [banners.length]);
+  }, [banners]);
 
   const prevSlide = () => {
+    if (!banners || banners.length === 0) return;
     setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
   };
 
@@ -50,10 +47,10 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
   };
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || !banners || banners.length === 0) return;
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
-  }, [isAutoPlaying, nextSlide]);
+  }, [isAutoPlaying, nextSlide, banners]);
 
   const handleSearch = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -67,6 +64,11 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
     },
     [searchQuery, router]
   );
+
+  // If no banners, return empty state (after all hooks)
+  if (!banners || banners.length === 0) {
+    return null;
+  }
 
   return (
     <div className="relative w-full overflow-hidden">
@@ -101,6 +103,10 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                     playsInline
                     controls={banner.videoSettings?.showControls === true}
                     className="w-full h-full object-cover"
+                    preload={index === 0 ? "auto" : "none"}
+                    // LCP optimization: fetchpriority="high" for first video
+                    // @ts-expect-error - fetchPriority is valid HTML but not in React types yet
+                    fetchpriority={index === 0 ? "high" : "auto"}
                   />
                 ) : (
                   <Image
@@ -108,10 +114,11 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                     alt={banner.alt || `Banner ${index + 1}`}
                     fill
                     className="w-full h-full object-cover"
-                    quality={95}
+                    quality={90}
                     sizes="100vw"
                     priority={index === 0}
-                    loading={index === 0 ? "eager" : "lazy"} // PERFORMANCE: Lazy load non-first carousel images
+                    // LCP optimization: first image gets high fetch priority
+                    fetchPriority={index === 0 ? "high" : "low"}
                   />
                 )}
 
@@ -196,13 +203,12 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
       <div className="relative z-10 mx-auto max-w-6xl px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12 lg:py-16 xl:py-20">
         {/* Heading */}
         <div className="relative text-center mb-12 sm:mb-16 md:mb-20 px-4">
-
           <h1
             className="font-extrabold tracking-tight text-gray-900 leading-tight
                  text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6"
           >
             BUBBLE WRAP,{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-teal-600">
               BOXES & MORE
             </span>
           </h1>
@@ -240,8 +246,6 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
               </span>
             </p>
           </div>
-
-
         </div>
 
         {/* Search Bar - Improved Mobile UI */}
@@ -249,14 +253,14 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
           <form onSubmit={handleSearch}>
             <div className="relative group">
               {/* Glow Effect */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl blur-lg opacity-20 group-hover:opacity-30 transition-opacity" />
+              <div className="absolute -inset-1 bg-linear-to-r from-emerald-600 to-teal-600 rounded-2xl blur-lg opacity-20 group-hover:opacity-30 transition-opacity" />
 
               {/* Search Container */}
               <div className="relative bg-white rounded-2xl shadow-xl border-2 border-emerald-100 hover:border-emerald-300 transition-colors overflow-hidden">
                 {/* Input Wrapper */}
                 <div className="flex items-center gap-3 px-4 sm:px-6">
                   {/* Search Icon */}
-                  <Search className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600 flex-shrink-0" />
+                  <Search className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600 shrink-0" />
 
                   {/* Input Field */}
                   <input
@@ -270,7 +274,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                   {/* Search Button */}
                   <button
                     type="submit"
-                    className="flex-shrink-0 px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl active:shadow-md transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 min-h-[44px] touch-manipulation"
+                    className="shrink-0 px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl active:shadow-md transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 min-h-[44px] touch-manipulation"
                   >
                     Search
                   </button>

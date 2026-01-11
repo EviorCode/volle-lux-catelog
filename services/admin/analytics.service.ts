@@ -4,6 +4,25 @@
  */
 
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import type { CartItem } from "@/types/cart";
+
+// Database response types from Supabase
+interface OrderRevenueData {
+  created_at: string;
+  total_amount: string | number;
+}
+
+interface OrderWithItems {
+  items: CartItem[] | null;
+}
+
+interface OrderStatusData {
+  status: string;
+}
+
+interface UserData {
+  created_at: string;
+}
 
 /**
  * Create service role Supabase client for admin operations
@@ -79,7 +98,7 @@ export async function getRevenueAnalytics(
     }
 
     // Fetch orders in date range
-    let query = supabase
+    const query = supabase
       .from("orders")
       .select("created_at, total_amount")
       .gte("created_at", startDate.toISOString())
@@ -92,7 +111,7 @@ export async function getRevenueAnalytics(
       throw new Error(`Failed to fetch revenue analytics: ${error.message}`);
     }
 
-    const ordersData = (data as any[]) || [];
+    const ordersData = (data as OrderRevenueData[]) || [];
 
     // Group by date and calculate revenue/orders per day
     const revenueMap = new Map<string, { revenue: number; orders: number }>();
@@ -102,8 +121,11 @@ export async function getRevenueAnalytics(
       const dateKey = date.toISOString().split("T")[0]; // YYYY-MM-DD
       
       const existing = revenueMap.get(dateKey) || { revenue: 0, orders: 0 };
+      const totalAmount = typeof order.total_amount === 'string' 
+        ? parseFloat(order.total_amount) 
+        : (order.total_amount || 0);
       revenueMap.set(dateKey, {
-        revenue: existing.revenue + parseFloat(order.total_amount || 0),
+        revenue: existing.revenue + totalAmount,
         orders: existing.orders + 1,
       });
     });
@@ -141,17 +163,19 @@ export async function getTopProducts(limit: number = 10): Promise<TopProduct[]> 
       throw new Error(`Failed to fetch top products: ${error.message}`);
     }
 
-    const ordersData = (data as any[]) || [];
+    const ordersData = (data as OrderWithItems[]) || [];
 
     // Aggregate product sales
     const productMap = new Map<string, { name: string; quantity: number; revenue: number }>();
 
     ordersData.forEach((order) => {
       const items = order.items || [];
-      items.forEach((item: any) => {
+      items.forEach((item: CartItem) => {
         const productName = item.product?.name || "Unknown Product";
         const quantity = item.quantity || 0;
-        const price = parseFloat(item.pricePerUnit || 0);
+        const price = typeof item.pricePerUnit === 'number' 
+          ? item.pricePerUnit 
+          : parseFloat(String(item.pricePerUnit || 0));
         const revenue = quantity * price;
 
         const existing = productMap.get(productName) || {
@@ -198,7 +222,7 @@ export async function getOrdersByStatus(): Promise<
       throw new Error(`Failed to fetch orders by status: ${error.message}`);
     }
 
-    const ordersData = (data as any[]) || [];
+    const ordersData = (data as OrderStatusData[]) || [];
     const total = ordersData.length;
 
     // Count by status
@@ -264,7 +288,7 @@ export async function getCustomerAcquisition(
       throw new Error(`Failed to fetch customer acquisition: ${error.message}`);
     }
 
-    const usersData = (data as any[]) || [];
+    const usersData = (data as UserData[]) || [];
 
     // Group by date
     const acquisitionMap = new Map<string, number>();

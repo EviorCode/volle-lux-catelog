@@ -138,8 +138,30 @@ const faqData = [
 ];
 
 export default function FAQPage() {
+  // Generate FAQPage structured data for rich snippets in Google Search
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqData.flatMap((category) =>
+      category.questions.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      }))
+    ),
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden">
+      {/* FAQPage Structured Data for Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+      />
+      
       {/* Breadcrumbs */}
       <div className="relative z-10 border-b border-emerald-200 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-6">

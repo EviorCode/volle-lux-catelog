@@ -447,6 +447,7 @@ async function handlePaymentIntentSucceeded(
 ) {
   // Most order creation is handled in checkout.session.completed
   // This can be used for additional processing or logging
+  console.log("Payment intent succeeded:", paymentIntent.id);
 }
 
 /**

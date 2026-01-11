@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingUp, Package } from "lucide-react";
+import { Package } from "lucide-react";
 
 interface TopProduct {
   name: string;
@@ -14,7 +14,10 @@ interface TopProductsListProps {
   limit?: number;
 }
 
-export function TopProductsList({ initialData = [], limit = 10 }: TopProductsListProps) {
+export function TopProductsList({
+  initialData = [],
+  limit = 10,
+}: TopProductsListProps) {
   const [products, setProducts] = useState<TopProduct[]>(initialData);
   const [loading, setLoading] = useState(!initialData.length);
 
@@ -22,12 +25,15 @@ export function TopProductsList({ initialData = [], limit = 10 }: TopProductsLis
     if (!initialData.length) {
       fetchData();
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only fetch on mount if no initial data
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/admin/analytics?type=topProducts&limit=${limit}`);
+      const response = await fetch(
+        `/api/admin/analytics?type=topProducts&limit=${limit}`
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch top products");
@@ -62,7 +68,9 @@ export function TopProductsList({ initialData = [], limit = 10 }: TopProductsLis
               <Package className="h-12 w-12 text-emerald-600" strokeWidth={2} />
             </div>
           </div>
-          <p className="mt-4 text-lg font-medium text-gray-900">No products data</p>
+          <p className="mt-4 text-lg font-medium text-gray-900">
+            No products data
+          </p>
           <p className="mt-2 text-sm text-gray-600">
             Product analytics will appear here
           </p>
@@ -127,4 +135,3 @@ function formatCurrency(amount: number): string {
     currency: "GBP",
   }).format(amount);
 }
-

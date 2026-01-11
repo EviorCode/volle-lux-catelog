@@ -9,7 +9,38 @@ import type {
   B2BRequest,
   CreateB2BRequestInput,
   AdminB2BRequest,
+  DeliveryAddress,
 } from "@/types/b2b-request";
+
+// Database response types from Supabase (snake_case)
+interface SupabaseB2BRequestData {
+  id: string;
+  user_id: string | null;
+  company_name: string;
+  contact_name: string;
+  email: string;
+  phone: string;
+  company_website: string | null;
+  vat_number: string | null;
+  products_interested: string;
+  estimated_quantity: string;
+  budget_range: string | null;
+  preferred_delivery_date: string | null;
+  delivery_address: DeliveryAddress;
+  additional_notes: string | null;
+  is_existing_customer: boolean;
+  status: string;
+  admin_notes: string | null;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+  created_at: string;
+  updated_at: string;
+  reviewed_by_user?: {
+    id: string;
+    email: string;
+    full_name: string | null;
+  } | null;
+}
 
 /**
  * Create a new B2B request
@@ -27,6 +58,7 @@ export async function createB2BRequest(
     } = await supabase.auth.getUser();
     userId = user?.id || null;
   } catch (error) {
+    console.error("Error getting user:", error);
     // If user lookup fails, continue with null (anonymous submission)
     console.log("No authenticated user, creating anonymous B2B request");
   }
@@ -95,7 +127,9 @@ export async function getAllB2BRequests(): Promise<AdminB2BRequest[]> {
     return [];
   }
 
-  return (data || []).map((item: any) => mapAdminB2BRequestFromDB(item));
+  return (data || []).map((item: SupabaseB2BRequestData) =>
+    mapAdminB2BRequestFromDB(item)
+  );
 }
 
 /**
@@ -190,7 +224,7 @@ export async function getPendingB2BRequestsCount(): Promise<number> {
 /**
  * Map database record to B2BRequest type
  */
-function mapB2BRequestFromDB(data: any): B2BRequest {
+function mapB2BRequestFromDB(data: SupabaseB2BRequestData): B2BRequest {
   return {
     id: data.id,
     userId: data.user_id,
@@ -207,7 +241,7 @@ function mapB2BRequestFromDB(data: any): B2BRequest {
     deliveryAddress: data.delivery_address,
     additionalNotes: data.additional_notes,
     isExistingCustomer: data.is_existing_customer,
-    status: data.status,
+    status: data.status as B2BRequest["status"],
     adminNotes: data.admin_notes,
     reviewedAt: data.reviewed_at,
     reviewedBy: data.reviewed_by,
@@ -219,7 +253,9 @@ function mapB2BRequestFromDB(data: any): B2BRequest {
 /**
  * Map database record to AdminB2BRequest type
  */
-function mapAdminB2BRequestFromDB(data: any): AdminB2BRequest {
+function mapAdminB2BRequestFromDB(
+  data: SupabaseB2BRequestData
+): AdminB2BRequest {
   const base = mapB2BRequestFromDB(data);
   return {
     ...base,
@@ -227,7 +263,7 @@ function mapAdminB2BRequestFromDB(data: any): AdminB2BRequest {
       ? {
           id: data.reviewed_by_user.id,
           email: data.reviewed_by_user.email,
-          fullName: data.reviewed_by_user.full_name,
+          fullName: data.reviewed_by_user.full_name || undefined,
         }
       : null,
   };

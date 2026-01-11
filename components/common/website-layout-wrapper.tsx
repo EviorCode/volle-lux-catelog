@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/common";
 import { AnnouncementBannerClient } from "@/components/common/announcement-banner-client";
-import { WhatsAppButton } from "@/components/common/whatsapp-button";
 import type { Category } from "@/types/category";
 import dynamic from "next/dynamic";
 
@@ -12,6 +11,12 @@ import dynamic from "next/dynamic";
 const Footer = dynamic(() => import("@/components/common/footer").then((mod) => mod.aFooter), {
   ssr: true, // Keep it true so search engines can still crawl your footer links.
 });
+
+// PERFORMANCE: Lazy load WhatsApp button - not critical for initial render
+const WhatsAppButton = dynamic(
+  () => import("@/components/common/whatsapp-button").then((mod) => mod.WhatsAppButton),
+  { ssr: true }
+);
 
 interface WebsiteLayoutWrapperProps {
   children: React.ReactNode;

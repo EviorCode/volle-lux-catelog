@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { createCheckoutSession } from "@/services/stripe/checkout.service";
-import { CartItem } from "@/types/cart";
+import { CartItem, ShippingAddress, BillingAddress } from "@/types/cart";
 
 /**
  * Create Stripe Checkout Session
@@ -22,8 +22,8 @@ export async function POST(request: NextRequest) {
       email, // Guest email for checkout
     }: {
       items: CartItem[];
-      shippingAddress?: any;
-      billingAddress?: any;
+      shippingAddress?: ShippingAddress;
+      billingAddress?: BillingAddress;
       shippingMethodId?: string;
       shippingCost?: number;
       vatAmount?: number;
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     // For guest checkout: require email
     // For authenticated checkout: use user email
     const checkoutEmail = user?.email || email;
-    
+
     if (!checkoutEmail) {
       return NextResponse.json(
         { error: "Email is required for checkout" },
@@ -72,12 +72,14 @@ export async function POST(request: NextRequest) {
     if (user?.id) {
       // Store session metadata for tracking
       // This helps track abandoned carts and pending checkouts
+      // @ts-expect-error - Supabase JSONB types require type assertion for CartItem[]
       const { error: upsertError } = await supabase.from("carts").upsert(
         {
           user_id: user.id,
-          items: items as any, // Cart items stored as JSONB
+          session_id: null,
+          items: items, // Cart items stored as JSONB
           updated_at: new Date().toISOString(),
-        } as any,
+        },
         {
           onConflict: "user_id", // Update existing cart for this user
           ignoreDuplicates: false, // Don't ignore, update instead

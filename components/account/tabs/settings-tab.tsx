@@ -9,11 +9,9 @@ import { User, Lock, Loader2, CheckCircle } from 'lucide-react'
 import { useAuth } from '@/components/auth/auth-provider'
 import { cn } from '@/lib/utils'
 
-interface SettingsTabProps {
-  userId: string
-}
 
-export function SettingsTab({ userId }: SettingsTabProps) {
+
+export function SettingsTab() {
   const { user, loading, updateProfile, updatePassword } = useAuth()
   const [activeTab, setActiveTab] = useState<'profile' | 'password'>('profile')
   const [profile, setProfile] = useState({

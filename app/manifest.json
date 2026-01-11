@@ -1,6 +1,9 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "Bubble Wrap Shop - Packaging Supplies UK",
+  "short_name": "Bubble Wrap Shop",
+  "description": "UK's leading supplier of packaging supplies. Buy bubble wrap, cardboard boxes, and protective packaging with next day delivery.",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +18,9 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
+  "theme_color": "#059669",
   "background_color": "#ffffff",
-  "display": "standalone"
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "business"]
 }

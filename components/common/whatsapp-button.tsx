@@ -1,7 +1,4 @@
-"use client";
-
-import { useState } from "react";
-
+// PERFORMANCE: Server component with CSS-only hover effects
 interface WhatsAppButtonProps {
   phoneNumber: string; // Format: +1234567890 (with country code)
   message?: string; // Pre-filled message
@@ -13,35 +10,20 @@ export function WhatsAppButton({
   message = "Hi! I'm interested in your products.",
   position = "left",
 }: WhatsAppButtonProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleClick = () => {
-    // Format phone number (remove any spaces, dashes, etc.)
-    const cleanPhone = phoneNumber.replace(/[^0-9+]/g, "");
-
-    // Encode the message for URL
-    const encodedMessage = encodeURIComponent(message);
-
-    // WhatsApp Web URL (works on desktop and mobile)
-    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-
-    // Open in new window
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-  };
+  // Format phone number (remove any spaces, dashes, etc.)
+  const cleanPhone = phoneNumber.replace(/[^0-9+]/g, "");
+  // Encode the message for URL
+  const encodedMessage = encodeURIComponent(message);
+  // WhatsApp Web URL (works on desktop and mobile)
+  const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
 
   return (
     <div
       className={`fixed ${position === "left" ? "left-4 sm:left-6 md:left-8" : "right-4 sm:right-6 md:right-8"} bottom-6 sm:bottom-8 md:bottom-10 z-40 group`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Tooltip - Shows on hover (desktop only) */}
+      {/* Tooltip - Shows on hover (desktop only) - CSS-only */}
       <div
-        className={`absolute ${position === "left" ? "left-full ml-4" : "right-full mr-4"} top-1/2 -translate-y-1/2 bg-slate-900 text-white px-4 py-2 rounded-lg shadow-xl text-sm whitespace-nowrap pointer-events-none transition-all duration-300 ${
-          isHovered
-            ? "opacity-100 translate-x-0"
-            : `opacity-0 ${position === "left" ? "-translate-x-2" : "translate-x-2"}`
-        } hidden md:block`}
+        className={`absolute ${position === "left" ? "left-full ml-4" : "right-full mr-4"} top-1/2 -translate-y-1/2 bg-slate-900 text-white px-4 py-2 rounded-lg shadow-xl text-sm whitespace-nowrap pointer-events-none transition-all duration-300 opacity-0 ${position === "left" ? "-translate-x-2" : "translate-x-2"} group-hover:opacity-100 group-hover:translate-x-0 hidden md:block`}
       >
         Chat with us on WhatsApp
         {/* Arrow */}
@@ -50,9 +32,11 @@ export function WhatsAppButton({
         />
       </div>
 
-      {/* Main Button */}
-      <button
-        onClick={handleClick}
+      {/* Main Button - Using anchor tag for no-JS support */}
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
         className="relative flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16  bg-[#25D366] hover:bg-[#20BA5A] text-white rounded-full shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-110 active:scale-95 min-h-[28px] min-w-[28px] touch-manipulation"
         aria-label="Chat on WhatsApp"
       >
@@ -82,7 +66,7 @@ export function WhatsAppButton({
         <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-red-500 text-white text-xs font-bold rounded-full border-2 border-white animate-bounce">
           !
         </span>
-      </button>
+      </a>
     </div>
   );
 }

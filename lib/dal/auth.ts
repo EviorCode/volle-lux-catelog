@@ -138,6 +138,7 @@ export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
       updatedAt: userProfile.updated_at,
     };
   } catch (error) {
+    console.error("Error in getCurrentUser:", error);
     // verifySession() will redirect, but catch here for type safety
     return null;
   }

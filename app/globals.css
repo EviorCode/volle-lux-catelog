@@ -229,28 +229,6 @@ body {
     display: none;
   }
 
-  /* Minimal label style */
-  .label-minimal {
-    font-size: 0.875rem;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-  }
-
-  /* Clean divider */
-  .divider-minimal {
-    @apply border-t border-neutral-300;
-  }
-
-  /* Subtle hover states */
-  .hover-minimal {
-    @apply transition-colors hover:text-neutral-600;
-  }
-
-  /* Button reset */
-  .btn-reset {
-    @apply border-0 bg-transparent p-0 outline-none;
-  }
-
   /* Blob animation for hero and CTA sections */
   @keyframes blob {
     0%,

@@ -3,6 +3,8 @@
  * Reference: Architecture.md Section 4.3
  */
 
+import { BillingAddress, CartItem } from "@/types/cart";
+import { ShippingAddress } from "@stripe/stripe-js";
 import { createBrowserClient } from "@supabase/ssr";
 
 // Types for our database schema (will be generated later)
@@ -105,7 +107,7 @@ export type Database = {
           id: string;
           user_id: string | null;
           session_id: string | null;
-          items: any; // JSON array of cart items
+          items: CartItem[]; // JSON array of cart items
           created_at: string;
           updated_at: string;
         };
@@ -113,7 +115,7 @@ export type Database = {
           id?: string;
           user_id?: string | null;
           session_id?: string | null;
-          items: any;
+          items: CartItem[];
           created_at?: string;
           updated_at?: string;
         };
@@ -121,7 +123,7 @@ export type Database = {
           id?: string;
           user_id?: string | null;
           session_id?: string | null;
-          items?: any;
+          items?: CartItem[];
           created_at?: string;
           updated_at?: string;
         };
@@ -145,9 +147,9 @@ export type Database = {
           currency: string;
           stripe_session_id: string | null;
           stripe_payment_intent_id: string | null;
-          shipping_address: any; // JSON object
-          billing_address: any; // JSON object
-          items: any; // JSON array of order items
+          shipping_address: ShippingAddress; // JSON object
+          billing_address: BillingAddress; // JSON object
+          items: CartItem[]; // JSON array of order items
           notes: string | null;
           customer_name: string | null;
           customer_phone: string | null;
@@ -159,7 +161,7 @@ export type Database = {
           refund_amount: number | null;
           refund_status: "none" | "partial" | "full" | null;
           payment_method: string;
-          metadata: any; // JSONB
+          metadata: Record<string, unknown>; // JSONB
           created_at: string;
           updated_at: string;
         };
@@ -181,9 +183,9 @@ export type Database = {
           currency?: string;
           stripe_session_id?: string | null;
           stripe_payment_intent_id?: string | null;
-          shipping_address: any;
-          billing_address: any;
-          items: any;
+          shipping_address: ShippingAddress;
+          billing_address: BillingAddress;
+          items: CartItem[];
           notes?: string | null;
           customer_name?: string | null;
           customer_phone?: string | null;
@@ -195,7 +197,7 @@ export type Database = {
           refund_amount?: number | null;
           refund_status?: "none" | "partial" | "full" | null;
           payment_method?: string;
-          metadata?: any;
+          metadata?: Record<string, unknown>;
           created_at?: string;
           updated_at?: string;
         };
@@ -217,9 +219,9 @@ export type Database = {
           currency?: string;
           stripe_session_id?: string | null;
           stripe_payment_intent_id?: string | null;
-          shipping_address?: any;
-          billing_address?: any;
-          items?: any;
+          shipping_address?: ShippingAddress;
+          billing_address?: BillingAddress;
+          items?: CartItem[];
           notes?: string | null;
           customer_name?: string | null;
           customer_phone?: string | null;
@@ -231,7 +233,7 @@ export type Database = {
           refund_amount?: number | null;
           refund_status?: "none" | "partial" | "full" | null;
           payment_method?: string;
-          metadata?: any;
+          metadata?: Record<string, unknown>;
           created_at?: string;
           updated_at?: string;
         };
@@ -250,7 +252,7 @@ export type Database = {
           estimated_quantity: string;
           budget_range: string | null;
           preferred_delivery_date: string | null;
-          delivery_address: any; // JSONB
+          delivery_address: ShippingAddress; // JSONB
           additional_notes: string | null;
           is_existing_customer: boolean;
           status: "pending" | "reviewed" | "quoted" | "converted" | "rejected";
@@ -273,7 +275,7 @@ export type Database = {
           estimated_quantity: string;
           budget_range?: string | null;
           preferred_delivery_date?: string | null;
-          delivery_address: any; // JSONB
+          delivery_address: ShippingAddress; // JSONB
           additional_notes?: string | null;
           is_existing_customer?: boolean;
           status?: "pending" | "reviewed" | "quoted" | "converted" | "rejected";
@@ -296,7 +298,7 @@ export type Database = {
           estimated_quantity?: string;
           budget_range?: string | null;
           preferred_delivery_date?: string | null;
-          delivery_address?: any; // JSONB
+          delivery_address?: ShippingAddress; // JSONB
           additional_notes?: string | null;
           is_existing_customer?: boolean;
           status?: "pending" | "reviewed" | "quoted" | "converted" | "rejected";

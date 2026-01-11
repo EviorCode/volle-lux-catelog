@@ -1,9 +1,6 @@
 "use client";
 
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 
 /**
  * Product Page Wrapper with Error Boundary

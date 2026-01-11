@@ -86,9 +86,37 @@ export default async function ProductsPage({
     : null;
 
   const searchQuery = sp.search?.trim();
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+
+  // CollectionPage structured data for better category indexing
+  const collectionStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: categoryDisplayName || "All Packaging Supplies",
+    description: category
+      ? `Browse our range of ${categoryDisplayName} packaging supplies. Wholesale pricing available. Next day delivery across the UK.`
+      : "Browse our complete catalog of packaging supplies including bubble wrap, cardboard boxes, packing tape, and protective packaging.",
+    url: category ? `${siteUrl}/products?category=${category}` : `${siteUrl}/products`,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Bubble Wrap Shop",
+      url: siteUrl,
+    },
+    provider: {
+      "@type": "Organization",
+      name: "Bubble Wrap Shop",
+      url: siteUrl,
+    },
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-emerald-50 via-white to-teal-50">
+      {/* CollectionPage Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionStructuredData) }}
+      />
+      
       <div className="relative z-10">
         {/* Breadcrumbs */}
         <div className="border-b border-emerald-200 bg-white/50 backdrop-blur-sm">

@@ -9,7 +9,6 @@ import {
   Users,
   Award,
   TrendingUp,
-  Heart,
   ArrowLeft,
   ShieldCheck,
   Truck,

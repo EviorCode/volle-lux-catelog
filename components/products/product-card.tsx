@@ -1,16 +1,13 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { Product } from "@/types/product";
 
 interface ProductCardProps {
   product: Product;
 }
 
+// PERFORMANCE: Converted to server component - uses CSS-only hover states
 export function ProductCard({ product }: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   const primaryImage = product.image;
   const secondaryImage = product.images?.[2] || product.image;
   const hasVariants = product.variants && product.variants.length > 1;
@@ -23,8 +20,6 @@ export function ProductCard({ product }: ProductCardProps) {
       <Link
         href={`/products/${product.slug}`}
         className="flex-1 relative overflow-hidden rounded-xl bg-white border border-gray-300 hover:border-emerald-300 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Gradient Ring Effect on Hover */}
         <div
@@ -35,20 +30,18 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="flex h-full flex-col p-3">
           {/* Image Container */}
           <div className="relative aspect-square w-full overflow-hidden rounded-lg mb-3">
-            {/* Primary Image */}
+            {/* Primary Image - CSS-only hover effect */}
             <Image
               src={primaryImage}
               alt={product.imageAlt || product.name}
               fill
-              className={`object-cover transition-all duration-500 ease-in-out ${
-                isHovered ? "opacity-0 scale-110" : "opacity-100 scale-100"
-              }`}
+              className="object-cover transition-all duration-500 ease-in-out opacity-100 scale-100 group-hover:opacity-0 group-hover:scale-110"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
               priority={false}
-              loading="lazy" // PERFORMANCE: Lazy load product images
+              loading="lazy"
             />
 
-            {/* Secondary Image (shows on hover) */}
+            {/* Secondary Image (shows on hover) - CSS-only hover effect */}
             <Image
               src={secondaryImage}
               alt={
@@ -57,12 +50,10 @@ export function ProductCard({ product }: ProductCardProps) {
                 `${product.imageAlt || product.name} - Alternate view`
               }
               fill
-              className={`object-cover transition-all duration-500 ease-in-out ${
-                isHovered ? "opacity-100 scale-100" : "opacity-0 scale-110"
-              }`}
+              className="object-cover transition-all duration-500 ease-in-out opacity-0 scale-110 group-hover:opacity-100 group-hover:scale-100"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
               priority={false}
-              loading="lazy" // PERFORMANCE: Lazy load product images
+              loading="lazy"
             />
 
             {/* Discount Badge */}

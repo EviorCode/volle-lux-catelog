@@ -51,6 +51,7 @@ export const ContactFormEmail: React.FC<Readonly<ContactFormEmailProps>> = ({
 
   return (
     <html>
+      {/* eslint-disable-next-line @next/next/no-head-element */}
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -429,7 +430,8 @@ export const ContactFormEmail: React.FC<Readonly<ContactFormEmailProps>> = ({
                         lineHeight: "1.6",
                       }}
                     >
-                      This is an automated notification from the Bubble wrap shop (Blackburn) Limited contact form.
+                      This is an automated notification from the Bubble wrap
+                      shop (Blackburn) Limited contact form.
                     </p>
                   </td>
                 </tr>

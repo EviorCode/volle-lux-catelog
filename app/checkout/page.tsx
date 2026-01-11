@@ -6,7 +6,6 @@ import { useCartStore } from "@/lib/stores/cart-store";
 import { useAuth } from "@/components/auth/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
@@ -14,13 +13,12 @@ import {
   Loader2,
   MapPin,
   CreditCard,
-  Package,
-  Plus,
   Check,
   Leaf,
   ShieldCheck,
   Truck,
   ArrowLeft,
+  Plus,
 } from "lucide-react";
 import {
   getSavedAddresses,
@@ -30,6 +28,7 @@ import { fetchWithRetry } from "@/lib/utils/retry";
 import { ShippingSelector } from "@/components/checkout/shipping-selector";
 import { OrderSummaryWithVAT } from "@/components/cart/order-summary-with-vat";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { Input } from "@/components/ui/input";
 
 type SavedAddress = SavedAddressType;
 
@@ -240,7 +239,7 @@ function CheckoutPageContent() {
       } else {
         throw new Error("No checkout URL received");
       }
-    } catch (err) {
+      } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setIsLoading(false);
     }

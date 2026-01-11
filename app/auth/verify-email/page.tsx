@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Mail, CheckCircle, ArrowRight, RefreshCw, Loader2, KeyRound } from 'lucide-react'
+import { CheckCircle, ArrowRight, RefreshCw, Loader2, KeyRound } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,7 +14,7 @@ function VerifyEmailContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const email = searchParams.get('email')
-  const { verifyOTP, resendOTP, loading } = useAuth()
+  const { verifyOTP, resendOTP } = useAuth()
   const [otpCode, setOtpCode] = useState('')
   const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [verifyStatus, setVerifyStatus] = useState<'idle' | 'verifying' | 'success' | 'error'>('idle')
@@ -63,7 +63,8 @@ function VerifyEmailContent() {
         setVerifyStatus('error')
         setError(result.error || 'Invalid OTP code. Please try again.')
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
       setVerifyStatus('error')
       setError('An unexpected error occurred. Please try again.')
     }
@@ -87,7 +88,8 @@ function VerifyEmailContent() {
         setError(result.error || 'Failed to resend OTP. Please try again.')
         setTimeout(() => setResendStatus('idle'), 3000)
       }
-    } catch (error) {
+      } catch (error) {
+      console.error("Error resending OTP:", error);
       setResendStatus('error')
       setError('Failed to resend OTP. Please try again.')
       setTimeout(() => setResendStatus('idle'), 3000)

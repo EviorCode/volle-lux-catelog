@@ -8,7 +8,7 @@ export default async function HeroSection() {
 
   return (
     <div className="relative w-full overflow-hidden">
-      {/* Carousel Component */}
+      {/* Carousel Component - fetchpriority="high" applied in hero-carousel.tsx */}
       <HeroCarousel banners={banners} />
 
       {/* Features Grid - Responsive stacking */}

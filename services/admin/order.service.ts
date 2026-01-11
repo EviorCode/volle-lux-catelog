@@ -5,7 +5,13 @@
  */
 
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-import type { Order } from "@/types/cart";
+import type {
+  Order,
+  OrderStatus,
+  CartItem,
+  ShippingAddress,
+  BillingAddress,
+} from "@/types/cart";
 
 /**
  * Create service role Supabase client for admin operations
@@ -62,6 +68,34 @@ export interface OrderListResponse {
   orders: AdminOrder[];
   total: number;
   count: number;
+}
+
+// Database response types from Supabase (snake_case)
+interface SupabaseOrderData {
+  id: string;
+  user_id: string | null;
+  email: string;
+  items: CartItem[] | null;
+  shipping_address: ShippingAddress | null;
+  billing_address: BillingAddress | null;
+  subtotal?: number | string | null;
+  total_amount: number | string;
+  discount?: number | string | null;
+  shipping?: number | string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  stripe_payment_intent_id?: string | null;
+  customer_name?: string | null;
+  customer_phone?: string | null;
+  tracking_number?: string | null;
+  notes?: string | null;
+}
+
+interface OrderStatsData {
+  status: string;
+  total_amount: number | string;
+  created_at: string;
 }
 
 /**
@@ -121,28 +155,65 @@ export async function getAllOrders(
       };
     }
 
-    // Convert to AdminOrder array (using any for Supabase data type)
-    const orders: AdminOrder[] = (data as any[]).map((orderData: any) => ({
-      id: orderData.id,
-      orderNumber: orderData.id.substring(0, 8).toUpperCase(),
-      userId: orderData.user_id,
-      email: orderData.email,
-      items: orderData.items || [],
-      shippingAddress: orderData.shipping_address || {},
-      billingAddress: orderData.billing_address || {},
-      subtotal: parseFloat(orderData.subtotal || orderData.total_amount || 0),
-      discount: parseFloat(orderData.discount || 0),
-      shipping: parseFloat(orderData.shipping || 0),
-      total: parseFloat(orderData.total_amount || 0),
-      status: orderData.status || "pending",
-      createdAt: new Date(orderData.created_at),
-      updatedAt: new Date(orderData.updated_at),
-      paymentIntentId: orderData.stripe_payment_intent_id,
-      customerName: orderData.customer_name || null,
-      customerPhone: orderData.customer_phone || null,
-      trackingNumber: orderData.tracking_number || null,
-      notes: orderData.notes || null,
-    }));
+    // Convert to AdminOrder array
+    const orders: AdminOrder[] = (data as SupabaseOrderData[]).map(
+      (orderData) => {
+        const subtotal =
+          typeof orderData.subtotal === "number"
+            ? orderData.subtotal
+            : typeof orderData.subtotal === "string"
+              ? parseFloat(orderData.subtotal)
+              : 0;
+        const totalAmount =
+          typeof orderData.total_amount === "number"
+            ? orderData.total_amount
+            : parseFloat(String(orderData.total_amount || 0));
+        const discount =
+          typeof orderData.discount === "number"
+            ? orderData.discount
+            : parseFloat(String(orderData.discount || 0));
+        const shipping =
+          typeof orderData.shipping === "number"
+            ? orderData.shipping
+            : parseFloat(String(orderData.shipping || 0));
+
+        return {
+          id: orderData.id,
+          orderNumber: orderData.id.substring(0, 8).toUpperCase(),
+          userId: orderData.user_id || undefined,
+          email: orderData.email,
+          items: orderData.items || [],
+          shippingAddress: (orderData.shipping_address as ShippingAddress) || {
+            fullName: "",
+            address: "",
+            city: "",
+            state: "",
+            zipCode: "",
+            country: "",
+          },
+          billingAddress: (orderData.billing_address as BillingAddress) || {
+            fullName: "",
+            address: "",
+            city: "",
+            state: "",
+            zipCode: "",
+            country: "",
+          },
+          subtotal: subtotal || totalAmount - shipping,
+          discount,
+          shipping,
+          total: totalAmount,
+          status: (orderData.status || "pending") as OrderStatus,
+          createdAt: new Date(orderData.created_at),
+          updatedAt: new Date(orderData.updated_at),
+          paymentIntentId: orderData.stripe_payment_intent_id || undefined,
+          customerName: orderData.customer_name || undefined,
+          customerPhone: orderData.customer_phone || undefined,
+          trackingNumber: orderData.tracking_number || undefined,
+          notes: orderData.notes || undefined,
+        };
+      }
+    );
 
     return {
       orders,
@@ -183,28 +254,61 @@ export async function getOrderById(
       return null;
     }
 
-    // Convert to AdminOrder (using any for Supabase data type)
-    const orderData = data as any;
+    // Convert to AdminOrder
+    const orderData = data as SupabaseOrderData;
+    const subtotal =
+      typeof orderData.subtotal === "number"
+        ? orderData.subtotal
+        : typeof orderData.subtotal === "string"
+          ? parseFloat(orderData.subtotal)
+          : 0;
+    const totalAmount =
+      typeof orderData.total_amount === "number"
+        ? orderData.total_amount
+        : parseFloat(String(orderData.total_amount || 0));
+    const discount =
+      typeof orderData.discount === "number"
+        ? orderData.discount
+        : parseFloat(String(orderData.discount || 0));
+    const shipping =
+      typeof orderData.shipping === "number"
+        ? orderData.shipping
+        : parseFloat(String(orderData.shipping || 0));
+
     const order: AdminOrder = {
       id: orderData.id,
       orderNumber: orderData.id.substring(0, 8).toUpperCase(),
-      userId: orderData.user_id,
+      userId: orderData.user_id || undefined,
       email: orderData.email,
       items: orderData.items || [],
-      shippingAddress: orderData.shipping_address || {},
-      billingAddress: orderData.billing_address || {},
-      subtotal: parseFloat(orderData.subtotal || orderData.total_amount || 0),
-      discount: parseFloat(orderData.discount || 0),
-      shipping: parseFloat(orderData.shipping || 0),
-      total: parseFloat(orderData.total_amount || 0),
-      status: orderData.status || "pending",
+      shippingAddress: (orderData.shipping_address as ShippingAddress) || {
+        fullName: "",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "",
+      },
+      billingAddress: (orderData.billing_address as BillingAddress) || {
+        fullName: "",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "",
+      },
+      subtotal: subtotal || totalAmount - shipping,
+      discount,
+      shipping,
+      total: totalAmount,
+      status: (orderData.status || "pending") as OrderStatus,
       createdAt: new Date(orderData.created_at),
       updatedAt: new Date(orderData.updated_at),
-      paymentIntentId: orderData.stripe_payment_intent_id,
-      customerName: orderData.customer_name || null,
-      customerPhone: orderData.customer_phone || null,
-      trackingNumber: orderData.tracking_number || null,
-      notes: orderData.notes || null,
+      paymentIntentId: orderData.stripe_payment_intent_id || undefined,
+      customerName: orderData.customer_name || undefined,
+      customerPhone: orderData.customer_phone || undefined,
+      trackingNumber: orderData.tracking_number || undefined,
+      notes: orderData.notes || undefined,
     };
 
     return order;
@@ -256,7 +360,7 @@ export async function updateOrderStatus(
 
     const { error } = await supabase
       .from("orders")
-      .update(updateData as any)
+      .update(updateData)
       .eq("id", orderId);
 
     if (error) {
@@ -297,7 +401,7 @@ export async function getOrderStats(): Promise<{
     }
 
     // Type assertion for statusCounts
-    const counts = (statusCounts || []) as any[];
+    const counts = (statusCounts || []) as OrderStatsData[];
 
     // Calculate statistics
     const total = counts.length || 0;
@@ -319,17 +423,23 @@ export async function getOrderStats(): Promise<{
       return orderDate.getTime() === today.getTime();
     });
 
-    const todayRevenue = todayOrders.reduce(
-      (sum, order) => sum + parseFloat(order.total_amount || 0),
-      0
-    );
+    const todayRevenue = todayOrders.reduce((sum, order) => {
+      const amount =
+        typeof order.total_amount === "number"
+          ? order.total_amount
+          : parseFloat(String(order.total_amount || 0));
+      return sum + amount;
+    }, 0);
 
     // Calculate average order value
     const totalRevenue =
-      counts.reduce(
-        (sum, order) => sum + parseFloat(order.total_amount || 0),
-        0
-      ) || 0;
+      counts.reduce((sum, order) => {
+        const amount =
+          typeof order.total_amount === "number"
+            ? order.total_amount
+            : parseFloat(String(order.total_amount || 0));
+        return sum + amount;
+      }, 0) || 0;
     const averageOrderValue = total > 0 ? totalRevenue / total : 0;
 
     return {

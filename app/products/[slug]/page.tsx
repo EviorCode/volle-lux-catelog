@@ -51,9 +51,6 @@ export async function generateMetadata({
   const productUrl = `${siteUrl}/products/${slug}`;
   const productImage = product.images?.[0] || product.image;
   const productPrice = product.basePrice.toFixed(2);
-  const productDescription =
-    product.description?.substring(0, 160) ||
-    `Premium ${product.name} - Professional packaging supplies. Starting from £${productPrice}. Eco-friendly options available.`;
 
   // Use custom SEO fields if available, otherwise generate from product data
   const seoTitle =
@@ -165,11 +162,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
       },
     },
     category: product.category || "Packaging Supplies",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.5",
-      reviewCount: "10",
-    },
+    // NOTE: AggregateRating removed - Google penalizes fake/hardcoded ratings
+    // Add real review integration when available (e.g., Trustpilot, Reviews.io)
   };
 
   return (

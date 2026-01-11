@@ -2,7 +2,7 @@
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { SHIPPING_OPTIONS, type ShippingOption } from "@/types/shipping"
+import { SHIPPING_OPTIONS } from "@/types/shipping"
 import { Check } from "lucide-react"
 
 interface ShippingSelectorProps {

@@ -1,7 +1,8 @@
-import {withSentryConfig} from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 // PERFORMANCE: Bundle analyzer for tracking bundle sizes
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
@@ -35,6 +36,18 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
+  },
+  // PERFORMANCE: Experimental features for better performance
+  experimental: {
+    // Optimize CSS loading to reduce render-blocking
+    optimizeCss: true,
+    // Optimize imports for large packages - tree-shakes unused exports
+    optimizePackageImports: [
+      "lucide-react",
+      "@radix-ui/react-icons",
+      "date-fns",
+      "@sanity/icons",
+    ],
   },
 };
 

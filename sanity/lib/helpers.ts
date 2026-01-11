@@ -1,19 +1,5 @@
-import { client } from "./client";
 import { urlFor } from "./image";
-import {
-  ALL_PRODUCTS_QUERY,
-  FEATURED_PRODUCTS_QUERY,
-  NEW_ARRIVALS_QUERY,
-  PRODUCT_BY_SLUG_QUERY,
-  PRODUCTS_BY_CATEGORY_QUERY,
-  ALL_CATEGORIES_QUERY,
-  SEARCH_PRODUCTS_QUERY,
-  FILTERED_PRODUCTS_QUERY,
-  PRODUCTS_BY_IDS_QUERY,
-  CATEGORY_BY_SLUG_QUERY,
-  PRODUCT_COUNT_BY_CATEGORY_QUERY,
-  HOMEPAGE_DATA_QUERY,
-} from "./queries";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 // Types for our data
 export interface SanityProduct {
@@ -37,7 +23,7 @@ export interface SanityProduct {
     _id: string;
     name: string;
     slug: { current: string };
-    image?: any;
+    image?: SanityImageSource;
   };
   mainImage?: {
     asset: {
@@ -181,31 +167,33 @@ function generateImageAlt(
   if (alt && alt.trim()) {
     return alt;
   }
-  
+
   const categoryContext = category ? ` ${category}` : "";
-  const imageContext = imageIndex !== undefined && imageIndex > 0 
-    ? ` - View ${imageIndex + 1}` 
-    : "";
-  
+  const imageContext =
+    imageIndex !== undefined && imageIndex > 0
+      ? ` - View ${imageIndex + 1}`
+      : "";
+
   return `${productName}${categoryContext} packaging supplies${imageContext}`;
 }
 
 export function transformSanityProduct(sanityProduct: SanityProduct) {
   const productName = sanityProduct.name;
   const category = sanityProduct.category?.name;
-  
+
   // Generate alt text for main image
   const mainImageAlt = generateImageAlt(
     sanityProduct.mainImage?.alt,
     productName,
     category
   );
-  
+
   // Generate alt text for gallery images
-  const galleryImagesAlt = sanityProduct.galleryImages?.map((img, index) =>
-    generateImageAlt(img.alt, productName, category, index + 1)
-  ) || [];
-  
+  const galleryImagesAlt =
+    sanityProduct.galleryImages?.map((img, index) =>
+      generateImageAlt(img.alt, productName, category, index + 1)
+    ) || [];
+
   return {
     id: sanityProduct._id,
     product_code: sanityProduct.productCode,
@@ -262,10 +250,10 @@ export function transformSanityProduct(sanityProduct: SanityProduct) {
 // Transform Sanity category to our Category type
 export function transformSanityCategory(sanityCategory: SanityCategory) {
   // Generate descriptive alt text for category images
-  const categoryImageAlt = sanityCategory.image?.alt 
+  const categoryImageAlt = sanityCategory.image?.alt
     ? sanityCategory.image.alt
     : `${sanityCategory.name} packaging supplies category`;
-  
+
   return {
     id: sanityCategory._id,
     name: sanityCategory.name,
@@ -287,8 +275,12 @@ export function transformSanityBanner(sanityBanner: SanityBanner) {
     index: sanityBanner.index,
     mediaType: sanityBanner.mediaType || "image",
     image: sanityBanner.backgroundImage?.asset?.url || "",
-    alt: sanityBanner.backgroundImage?.alt || sanityBanner.title || `Banner ${sanityBanner.index}`,
-    video: sanityBanner.backgroundVideo?.asset?.url || sanityBanner.videoUrl || "",
+    alt:
+      sanityBanner.backgroundImage?.alt ||
+      sanityBanner.title ||
+      `Banner ${sanityBanner.index}`,
+    video:
+      sanityBanner.backgroundVideo?.asset?.url || sanityBanner.videoUrl || "",
     videoPoster: sanityBanner.videoPoster?.asset?.url || "",
     videoSettings: sanityBanner.videoSettings || {
       autoplay: true,
@@ -313,7 +305,11 @@ export function transformSanityAnnouncement(
 }
 
 // Helper function to get optimized image URL
-export function getImageUrl(source: any, width?: number, height?: number) {
+export function getImageUrl(
+  source: SanityImageSource | null | undefined,
+  width?: number,
+  height?: number
+) {
   if (!source) return "";
 
   let builder = urlFor(source);

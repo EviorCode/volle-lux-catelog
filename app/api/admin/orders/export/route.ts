@@ -6,12 +6,16 @@
 import { NextRequest } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/utils/admin-auth";
-import { getAllOrders } from "@/services/admin/order.service";
+import {
+  getAllOrders,
+  type OrderFilters,
+} from "@/services/admin/order.service";
+import type { CartItem } from "@/types/cart";
 
 /**
  * GET /api/admin/orders/export
  * Export orders as CSV
- * 
+ *
  * Query params:
  * - status: Filter by status
  * - startDate: Filter by start date
@@ -42,8 +46,8 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get("endDate");
 
     // Build filters object
-    const filters: any = {};
-    if (status) filters.status = status;
+    const filters: OrderFilters = {};
+    if (status) filters.status = status as OrderFilters["status"];
     if (startDate) filters.startDate = startDate;
     if (endDate) filters.endDate = endDate;
 
@@ -52,76 +56,90 @@ export async function GET(request: NextRequest) {
 
     // Convert orders to CSV format
     const csvRows = [
-      ['Order Number', 'Date', 'Customer', 'Email', 'Status', 'Total Amount', 'Payment Status', 'Items', 'Shipping Address', 'Tracking Number'].join(','),
-      ...result.orders.map(order => {
+      [
+        "Order Number",
+        "Date",
+        "Customer",
+        "Email",
+        "Status",
+        "Total Amount",
+        "Payment Status",
+        "Items",
+        "Shipping Address",
+        "Tracking Number",
+      ].join(","),
+      ...result.orders.map((order) => {
         // Format items
-        const items = order.items
-          ?.map((item: any) => `${item.product?.name || 'Unknown'} (x${item.quantity || 0})`)
-          .join('; ') || '';
-        
+        const items =
+          order.items
+            ?.map(
+              (item: CartItem) =>
+                `${item.product?.name || "Unknown"} (x${item.quantity || 0})`
+            )
+            .join("; ") || "";
+
         // Format shipping address
         const shippingAddress = order.shippingAddress
-          ? `${order.shippingAddress.address || ''}, ${order.shippingAddress.city || ''}, ${order.shippingAddress.state || ''} ${order.shippingAddress.zipCode || ''}`
-          : '';
-        
+          ? `${order.shippingAddress.address || ""}, ${order.shippingAddress.city || ""}, ${order.shippingAddress.state || ""} ${order.shippingAddress.zipCode || ""}`
+          : "";
+
         // Format date
         const date = order.createdAt
           ? new Date(order.createdAt).toLocaleDateString()
-          : '';
-        
+          : "";
+
         // Escape CSV fields
-        const escapeCSV = (value: any) => {
-          const str = String(value || '');
-          if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        const escapeCSV = (value: string | number | undefined) => {
+          const str = String(value || "");
+          if (str.includes(",") || str.includes('"') || str.includes("\n")) {
             return `"${str.replace(/"/g, '""')}"`;
           }
           return str;
         };
-        
+
         return [
-          order.orderNumber || '',
+          order.orderNumber || "",
           escapeCSV(date),
-          escapeCSV(order.customerName || ''),
-          escapeCSV(order.email || ''),
-          escapeCSV(order.status || ''),
+          escapeCSV(order.customerName || ""),
+          escapeCSV(order.email || ""),
+          escapeCSV(order.status || ""),
           escapeCSV(`£${order.total.toFixed(2)}`),
-          escapeCSV('paid'),
+          escapeCSV("paid"),
           escapeCSV(items),
           escapeCSV(shippingAddress),
-          escapeCSV(order.trackingNumber || ''),
-        ].join(',');
+          escapeCSV(order.trackingNumber || ""),
+        ].join(",");
       }),
     ];
 
-    const csvContent = csvRows.join('\n');
+    const csvContent = csvRows.join("\n");
 
     // Generate filename with timestamp
-    const timestamp = new Date().toISOString().split('T')[0];
+    const timestamp = new Date().toISOString().split("T")[0];
     const filename = `orders-export-${timestamp}.csv`;
 
     // Return CSV file
     return new Response(csvContent, {
       status: 200,
       headers: {
-        'Content-Type': 'text/csv',
-        'Content-Disposition': `attachment; filename="${filename}"`,
-        'Cache-Control': 'no-store',
+        "Content-Type": "text/csv",
+        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Cache-Control": "no-store",
       },
     });
   } catch (error) {
-    console.error('Error exporting orders:', error);
+    console.error("Error exporting orders:", error);
     return new Response(
       JSON.stringify({
-        error: 'Failed to export orders',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        error: "Failed to export orders",
+        message: error instanceof Error ? error.message : "Unknown error",
       }),
       {
         status: 500,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
   }
 }
-

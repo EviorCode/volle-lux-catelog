@@ -41,6 +41,7 @@ export const OrderConfirmationEmail: React.FC<
 
   return (
     <html>
+      {/* eslint-disable-next-line @next/next/no-head-element */}
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -50,7 +51,8 @@ export const OrderConfirmationEmail: React.FC<
       </head>
       <body
         style={{
-          fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          fontFamily:
+            '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
           lineHeight: "1.6",
           color: colors.text,
           backgroundColor: "#f1f5f9", // slate-100
@@ -76,7 +78,8 @@ export const OrderConfirmationEmail: React.FC<
                   backgroundColor: colors.background,
                   borderRadius: "12px",
                   overflow: "hidden",
-                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+                  boxShadow:
+                    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
                   maxWidth: "600px",
                 }}
               >
@@ -198,7 +201,12 @@ export const OrderConfirmationEmail: React.FC<
                                 >
                                   Date
                                 </span>
-                                <span style={{ color: colors.text, fontSize: "16px" }}>
+                                <span
+                                  style={{
+                                    color: colors.text,
+                                    fontSize: "16px",
+                                  }}
+                                >
                                   {orderDate}
                                 </span>
                               </td>
@@ -218,7 +226,12 @@ export const OrderConfirmationEmail: React.FC<
                                 >
                                   Email
                                 </span>
-                                <span style={{ color: colors.text, fontSize: "16px" }}>
+                                <span
+                                  style={{
+                                    color: colors.text,
+                                    fontSize: "16px",
+                                  }}
+                                >
                                   {customerEmail}
                                 </span>
                               </td>
@@ -260,7 +273,10 @@ export const OrderConfirmationEmail: React.FC<
                           >
                             <table width="100%" cellPadding="0" cellSpacing="0">
                               <tr>
-                                <td width="70%" style={{ verticalAlign: "top" }}>
+                                <td
+                                  width="70%"
+                                  style={{ verticalAlign: "top" }}
+                                >
                                   <strong
                                     style={{
                                       color: colors.text,
@@ -337,7 +353,9 @@ export const OrderConfirmationEmail: React.FC<
                           align="right"
                           style={{ padding: "8px 0" }}
                         >
-                          <strong style={{ color: colors.text }}>£{order.subtotal.toFixed(2)}</strong>
+                          <strong style={{ color: colors.text }}>
+                            £{order.subtotal.toFixed(2)}
+                          </strong>
                         </td>
                       </tr>
                       {order.discount > 0 && (
@@ -372,10 +390,12 @@ export const OrderConfirmationEmail: React.FC<
                           Shipping:
                         </td>
                         <td align="right" style={{ padding: "8px 0" }}>
-                          <strong style={{ color: colors.text }}>£{order.shipping.toFixed(2)}</strong>
+                          <strong style={{ color: colors.text }}>
+                            £{order.shipping.toFixed(2)}
+                          </strong>
                         </td>
                       </tr>
-                      {(order as any).vatAmount && (order as any).vatAmount > 0 && (
+                      {order.vatAmount && order.vatAmount > 0 && (
                         <tr>
                           <td
                             align="right"
@@ -388,7 +408,7 @@ export const OrderConfirmationEmail: React.FC<
                           </td>
                           <td align="right" style={{ padding: "8px 0" }}>
                             <strong style={{ color: colors.text }}>
-                              £{((order as any).vatAmount).toFixed(2)}
+                              £{order.vatAmount.toFixed(2)}
                             </strong>
                           </td>
                         </tr>
@@ -455,7 +475,9 @@ export const OrderConfirmationEmail: React.FC<
                               fontSize: "15px",
                             }}
                           >
-                            <strong style={{ display: "block", marginBottom: "4px" }}>
+                            <strong
+                              style={{ display: "block", marginBottom: "4px" }}
+                            >
                               {order.shippingAddress.fullName}
                             </strong>
                             {order.shippingAddress.address}
@@ -512,7 +534,8 @@ export const OrderConfirmationEmail: React.FC<
                               fontWeight: "600",
                               fontSize: "16px",
                               fontFamily: '"Inter", sans-serif',
-                              boxShadow: "0 4px 6px -1px rgba(5, 150, 105, 0.2)",
+                              boxShadow:
+                                "0 4px 6px -1px rgba(5, 150, 105, 0.2)",
                             }}
                           >
                             View Order Details
@@ -560,7 +583,8 @@ export const OrderConfirmationEmail: React.FC<
                         color: colors.textLight,
                       }}
                     >
-                      © {new Date().getFullYear()} Bubble wrap shop (Blackburn) Limited. All rights reserved.
+                      © {new Date().getFullYear()} Bubble wrap shop (Blackburn)
+                      Limited. All rights reserved.
                     </p>
                   </td>
                 </tr>

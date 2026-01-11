@@ -1,6 +1,20 @@
-import { CartItem, Order } from "@/types/cart";
+import { CartItem, Order, ShippingAddress, BillingAddress } from "@/types/cart";
 import { createClient } from "@/lib/supabase/client";
 import { SupabaseClient } from "@supabase/supabase-js";
+
+// Database response types from Supabase (snake_case)
+interface SupabaseOrderData {
+  id: string;
+  user_id: string | null;
+  items: CartItem[];
+  shipping_address: ShippingAddress;
+  billing_address: BillingAddress;
+  total_amount: number;
+  shipping?: number | null;
+  status: string;
+  created_at: string;
+  stripe_payment_intent_id?: string | null;
+}
 
 /**
  * Cart Service
@@ -342,10 +356,10 @@ export async function getUserOrders(userId: string): Promise<Order[]> {
     }
 
     // Convert Supabase data to Order array
-    const orders: Order[] = data.map((orderData: any) => ({
+    const orders: Order[] = (data as SupabaseOrderData[]).map((orderData) => ({
       id: orderData.id,
       orderNumber: orderData.id,
-      userId: orderData.user_id,
+      userId: orderData.user_id || undefined,
       items: orderData.items,
       shippingAddress: orderData.shipping_address,
       billingAddress: orderData.billing_address,
@@ -353,9 +367,9 @@ export async function getUserOrders(userId: string): Promise<Order[]> {
       discount: 0,
       shipping: orderData.shipping || 0,
       total: orderData.total_amount,
-      status: orderData.status,
+      status: orderData.status as Order["status"],
       createdAt: new Date(orderData.created_at),
-      paymentIntentId: orderData.stripe_payment_intent_id,
+      paymentIntentId: orderData.stripe_payment_intent_id || undefined,
     }));
 
     return orders;

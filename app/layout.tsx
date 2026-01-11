@@ -1,6 +1,4 @@
-
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { WebsiteLayoutWrapper } from "@/components/common/website-layout-wrapper";
@@ -81,31 +79,34 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GB",
     url: baseUrl,
-    siteName: "Bubble Wrap Shop - Premium Packaging Supplies",
-    title: "Bubble Wrap Shop - Premium Packaging Supplies",
+    siteName: "Bubble Wrap Shop",
+    // OG Title: 50-60 chars optimal (currently 44 chars)
+    title: "Bubble Wrap Shop | Packaging Supplies UK",
+    // OG Description: 110-160 chars optimal (currently 118 chars)
     description:
-      "Professional packaging supplies with automatic bulk pricing. Next day delivery. Eco-friendly options.",
+      "UK packaging supplies with bulk pricing. Bubble wrap, boxes & protective packaging. Next day delivery available.",
     images: [
       {
-        url: "/logo.jpg",
+        // Must be absolute URL for social sharing
+        url: `${baseUrl}/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "Bubble Wrap Shop Premium Packaging Supplies",
+        alt: "Bubble Wrap Shop - Packaging Supplies UK",
         type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bubble Wrap Shop - Premium Packaging Supplies",
+    title: "Bubble Wrap Shop | Packaging Supplies UK",
     description:
-      "Professional packaging supplies with automatic bulk pricing. Next day delivery. Eco-friendly options.",
+      "UK packaging supplies with bulk pricing. Bubble wrap, boxes & protective packaging. Next day delivery available.",
     images: [
       {
-        url: "/logo.jpg",
+        url: `${baseUrl}/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "Bubble Wrap Shop Premium Packaging Supplies",
+        alt: "Bubble Wrap Shop - Packaging Supplies UK",
       },
     ],
   },
@@ -120,7 +121,8 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {},
+  // Domain verified via DNS - no meta tag needed
+  // Bing can also be verified via DNS at https://www.bing.com/webmasters
 };
 
 export default async function RootLayout({
@@ -151,9 +153,10 @@ export default async function RootLayout({
         className="min-h-screen bg-background font-sans antialiased"
         suppressHydrationWarning
       >
-        <Script id="silence-console" strategy="beforeInteractive">
-          {`(function(){try{if(process&&process.env&&process.env.NODE_ENV==='production'){['log','info','debug','trace'].forEach(function(m){if(console&&console[m]){console[m]=function(){}}})}}catch(e){}})();`}
-        </Script>
+        {/* Console silencing script removed - was causing CSP violations
+            and doesn't work in browser anyway (process.env is server-only).
+            Production console.logs should be removed at build time via 
+            compiler options or eslint rules instead. */}
         <AuthProvider>
           <CartProvider>
             <WebsiteLayoutWrapper categories={categories || []}>

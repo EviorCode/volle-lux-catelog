@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { Package } from "lucide-react";
 import { DoughnutSkeleton } from "./chart-skeleton";
@@ -24,7 +19,9 @@ interface OrdersStatusChartProps {
   initialData?: StatusData[];
 }
 
-export function OrdersStatusChart({ initialData = [] }: OrdersStatusChartProps) {
+export function OrdersStatusChart({
+  initialData = [],
+}: OrdersStatusChartProps) {
   const [data, setData] = useState<StatusData[]>(initialData);
   const [loading, setLoading] = useState(!initialData.length);
 
@@ -32,7 +29,8 @@ export function OrdersStatusChart({ initialData = [] }: OrdersStatusChartProps) 
     if (!initialData.length) {
       fetchData();
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only fetch on mount if no initial data
 
   const fetchData = async () => {
     try {
@@ -102,10 +100,21 @@ export function OrdersStatusChart({ initialData = [] }: OrdersStatusChartProps) 
         cornerRadius: 8,
         displayColors: true,
         callbacks: {
-          label: function (context: any) {
+          label: function (context: {
+            label?: string;
+            parsed: number;
+            dataset: { data: number[] };
+          }) {
             const label = context.label || "";
             const value = context.parsed || 0;
-            const percentage = ((value / context.dataset.data.reduce((a: number, b: number) => a + b, 0)) * 100).toFixed(1);
+            const percentage = (
+              (value /
+                context.dataset.data.reduce(
+                  (a: number, b: number) => a + b,
+                  0
+                )) *
+              100
+            ).toFixed(1);
             return `${label}: ${value} (${percentage}%)`;
           },
         },
@@ -132,11 +141,16 @@ export function OrdersStatusChart({ initialData = [] }: OrdersStatusChartProps) 
         <div className="text-center">
           <div className="flex justify-center mb-4">
             <div className="rounded-full bg-linear-to-br from-emerald-100 to-teal-100 p-4 border border-emerald-200">
-              <Package className="mx-auto h-12 w-12 text-emerald-600" strokeWidth={2} />
+              <Package
+                className="mx-auto h-12 w-12 text-emerald-600"
+                strokeWidth={2}
+              />
             </div>
           </div>
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-300">
-            <p className="mt-4 text-lg font-medium text-gray-900">No orders yet</p>
+            <p className="mt-4 text-lg font-medium text-gray-900">
+              No orders yet
+            </p>
             <p className="mt-2 text-sm text-gray-600">
               Order status data will appear here once orders are placed
             </p>

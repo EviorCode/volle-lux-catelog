@@ -85,7 +85,8 @@ function ResetPasswordForm() {
       } else {
         setError(result.error || "Failed to update password");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Error updating password:", error);
       setError("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);

@@ -7,6 +7,18 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { AuthResult } from "./auth.service";
 
+// Type for user profile from database (snake_case from Supabase)
+interface UserProfile {
+  id: string;
+  email: string;
+  full_name: string | null;
+  phone: string | null;
+  company: string | null;
+  avatar_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 /**
  * Get current user (server-side)
  * Returns the current authenticated user from server context
@@ -42,17 +54,19 @@ export async function getCurrentUserServer(): Promise<AuthResult> {
       };
     }
 
+    const typedProfile = profile as UserProfile;
+
     return {
       success: true,
       user: {
-        id: (profile as any).id,
-        email: (profile as any).email,
-        fullName: (profile as any).full_name,
-        phone: (profile as any).phone,
-        company: (profile as any).company,
-        avatarUrl: (profile as any).avatar_url,
-        createdAt: (profile as any).created_at,
-        updatedAt: (profile as any).updated_at,
+        id: typedProfile.id,
+        email: typedProfile.email,
+        fullName: typedProfile.full_name || undefined,
+        phone: typedProfile.phone || undefined,
+        company: typedProfile.company || undefined,
+        avatarUrl: typedProfile.avatar_url || undefined,
+        createdAt: typedProfile.created_at,
+        updatedAt: typedProfile.updated_at,
       },
     };
   } catch (error) {

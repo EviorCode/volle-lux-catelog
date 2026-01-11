@@ -84,7 +84,7 @@ export function calculateTotalPrice(
  * TODO: Fetch from Sanity CMS
  */
 export async function getPricingTiers(
-  productId: string
+  
 ): Promise<PricingTier[]> {
   // TODO: Fetch pricing tiers from Sanity CMS
   // TODO: Use GROQ query to get product pricing tiers
@@ -97,7 +97,7 @@ export async function getPricingTiers(
  */
 export function calculateDiscountPercentage(
   tier: PricingTier,
-  basePrice: number
+ 
 ): number {
   return tier.discount || 0;
 }

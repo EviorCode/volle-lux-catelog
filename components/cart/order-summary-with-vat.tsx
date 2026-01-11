@@ -1,10 +1,11 @@
 "use client"
 
+import { CartItem } from "@/types/cart";
 import { getShippingOptionById } from "@/types/shipping"
 import type { ShippingCalculation } from "@/types/shipping"
 
 interface OrderSummaryWithVATProps {
-  summary: ShippingCalculation & { items: any[]; discount: number }
+  summary: ShippingCalculation & { items: CartItem[]; discount: number }
   showTitle?: boolean
 }
 

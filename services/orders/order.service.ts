@@ -5,7 +5,27 @@
  */
 
 import { createClient as createServerClient } from "@supabase/supabase-js";
-import { Order, CartItem } from "@/types/cart";
+import { Order, CartItem, ShippingAddress, BillingAddress } from "@/types/cart";
+
+// Database response types from Supabase (snake_case)
+interface SupabaseOrderData {
+  id: string;
+  user_id: string | null;
+  items: CartItem[] | null;
+  shipping_address: ShippingAddress | null;
+  billing_address: BillingAddress | null;
+  subtotal?: number | string | null;
+  total_amount: number | string;
+  discount?: number | string | null;
+  shipping?: number | string | null;
+  shipping_cost?: number | string | null;
+  shipping_method?: string | null;
+  vat_amount?: number | string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  stripe_payment_intent_id?: string | null;
+}
 
 /**
  * Create service role Supabase client (bypasses RLS)
@@ -94,7 +114,7 @@ export async function createOrder(orderData: {
         notes: null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      } as any)
+      })
       .select("id")
       .single();
 
@@ -139,22 +159,52 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
     }
 
     // Convert Supabase data to Order type using new schema fields
+    const subtotal = typeof data.subtotal === 'number' 
+      ? data.subtotal 
+      : parseFloat(String(data.subtotal || data.total_amount || 0));
+    const discount = typeof data.discount === 'number'
+      ? data.discount
+      : parseFloat(String(data.discount || 0));
+    const shipping = typeof data.shipping === 'number'
+      ? data.shipping
+      : parseFloat(String(data.shipping || data.shipping_cost || 0));
+    const vatAmount = typeof data.vat_amount === 'number'
+      ? data.vat_amount
+      : parseFloat(String(data.vat_amount || 0));
+    const total = typeof data.total_amount === 'number'
+      ? data.total_amount
+      : parseFloat(String(data.total_amount || 0));
+    
     const order: Order = {
       id: data.id,
       orderNumber: data.id.substring(0, 8).toUpperCase(), // Create readable order number
-      userId: data.user_id,
+      userId: data.user_id || undefined,
       items: data.items || [],
-      shippingAddress: data.shipping_address || {},
-      billingAddress: data.billing_address || {},
-      subtotal: parseFloat(data.subtotal || data.total_amount || 0),
-      discount: parseFloat(data.discount || 0),
-      shipping: parseFloat(data.shipping || data.shipping_cost || 0),
+      shippingAddress: (data.shipping_address as ShippingAddress) || {
+        fullName: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: '',
+      },
+      billingAddress: (data.billing_address as BillingAddress) || {
+        fullName: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: '',
+      },
+      subtotal,
+      discount,
+      shipping,
       shippingMethod: data.shipping_method || null,
-      vatAmount: parseFloat(data.vat_amount || 0),
-      total: parseFloat(data.total_amount || 0),
-      status: data.status || "pending",
+      vatAmount,
+      total,
+      status: (data.status || "pending") as Order["status"],
       createdAt: new Date(data.created_at),
-      paymentIntentId: data.stripe_payment_intent_id,
+      paymentIntentId: data.stripe_payment_intent_id || undefined,
     };
 
     return order;
@@ -190,23 +240,55 @@ export async function getUserOrders(userId: string): Promise<Order[]> {
     }
 
     // Convert Supabase data to Order array using new schema fields
-    const orders: Order[] = data.map((orderData: any) => ({
-      id: orderData.id,
-      orderNumber: orderData.id.substring(0, 8).toUpperCase(),
-      userId: orderData.user_id,
-      items: orderData.items || [],
-      shippingAddress: orderData.shipping_address || {},
-      billingAddress: orderData.billing_address || {},
-      subtotal: parseFloat(orderData.subtotal || orderData.total_amount || 0),
-      discount: parseFloat(orderData.discount || 0),
-      shipping: parseFloat(orderData.shipping || orderData.shipping_cost || 0),
-      shippingMethod: orderData.shipping_method || null,
-      vatAmount: parseFloat(orderData.vat_amount || 0),
-      total: parseFloat(orderData.total_amount || 0),
-      status: orderData.status || "pending",
-      createdAt: new Date(orderData.created_at),
-      paymentIntentId: orderData.stripe_payment_intent_id,
-    }));
+    const orders: Order[] = (data as SupabaseOrderData[]).map((orderData) => {
+      const subtotal = typeof orderData.subtotal === 'number' 
+        ? orderData.subtotal 
+        : parseFloat(String(orderData.subtotal || orderData.total_amount || 0));
+      const discount = typeof orderData.discount === 'number'
+        ? orderData.discount
+        : parseFloat(String(orderData.discount || 0));
+      const shipping = typeof orderData.shipping === 'number'
+        ? orderData.shipping
+        : parseFloat(String(orderData.shipping || orderData.shipping_cost || 0));
+      const vatAmount = typeof orderData.vat_amount === 'number'
+        ? orderData.vat_amount
+        : parseFloat(String(orderData.vat_amount || 0));
+      const total = typeof orderData.total_amount === 'number'
+        ? orderData.total_amount
+        : parseFloat(String(orderData.total_amount || 0));
+      
+      return {
+        id: orderData.id,
+        orderNumber: orderData.id.substring(0, 8).toUpperCase(),
+        userId: orderData.user_id || undefined,
+        items: orderData.items || [],
+        shippingAddress: (orderData.shipping_address as ShippingAddress) || {
+          fullName: '',
+          address: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          country: '',
+        },
+        billingAddress: (orderData.billing_address as BillingAddress) || {
+          fullName: '',
+          address: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          country: '',
+        },
+        subtotal,
+        discount,
+        shipping,
+        shippingMethod: orderData.shipping_method || null,
+        vatAmount,
+        total,
+        status: (orderData.status || "pending") as Order["status"],
+        createdAt: new Date(orderData.created_at),
+        paymentIntentId: orderData.stripe_payment_intent_id || undefined,
+      };
+    });
 
     return orders;
   } catch (error) {
@@ -234,7 +316,7 @@ export async function updateOrderStatus(
       .update({
         status,
         updated_at: new Date().toISOString(),
-      } as any)
+      })
       .eq("id", orderId);
 
     if (error) {
@@ -305,22 +387,52 @@ export async function getOrderByStripeSessionId(
     }
 
     // Convert Supabase data to Order type using new schema fields
+    const subtotal = typeof data.subtotal === 'number' 
+      ? data.subtotal 
+      : parseFloat(String(data.subtotal || data.total_amount || 0));
+    const discount = typeof data.discount === 'number'
+      ? data.discount
+      : parseFloat(String(data.discount || 0));
+    const shipping = typeof data.shipping === 'number'
+      ? data.shipping
+      : parseFloat(String(data.shipping || data.shipping_cost || 0));
+    const vatAmount = typeof data.vat_amount === 'number'
+      ? data.vat_amount
+      : parseFloat(String(data.vat_amount || 0));
+    const total = typeof data.total_amount === 'number'
+      ? data.total_amount
+      : parseFloat(String(data.total_amount || 0));
+    
     const order: Order = {
       id: data.id,
       orderNumber: data.id.substring(0, 8).toUpperCase(),
-      userId: data.user_id,
+      userId: data.user_id || undefined,
       items: data.items || [],
-      shippingAddress: data.shipping_address || {},
-      billingAddress: data.billing_address || {},
-      subtotal: parseFloat(data.subtotal || data.total_amount || 0),
-      discount: parseFloat(data.discount || 0),
-      shipping: parseFloat(data.shipping || data.shipping_cost || 0),
+      shippingAddress: (data.shipping_address as ShippingAddress) || {
+        fullName: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: '',
+      },
+      billingAddress: (data.billing_address as BillingAddress) || {
+        fullName: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: '',
+      },
+      subtotal,
+      discount,
+      shipping,
       shippingMethod: data.shipping_method || null,
-      vatAmount: parseFloat(data.vat_amount || 0),
-      total: parseFloat(data.total_amount || 0),
-      status: data.status || "pending",
+      vatAmount,
+      total,
+      status: (data.status || "pending") as Order["status"],
       createdAt: new Date(data.created_at),
-      paymentIntentId: data.stripe_payment_intent_id,
+      paymentIntentId: data.stripe_payment_intent_id || undefined,
     };
 
     return order;

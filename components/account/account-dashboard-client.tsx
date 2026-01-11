@@ -66,7 +66,7 @@ export function AccountDashboardClient({
           <AddressesTab userId={userId} initialAddresses={initialAddresses} />
         );
       case "settings":
-        return <SettingsTab userId={userId} />;
+        return <SettingsTab />;
       default:
         return <DashboardTab userId={userId} orders={initialOrders} />;
     }

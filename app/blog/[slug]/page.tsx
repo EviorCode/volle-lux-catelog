@@ -1165,8 +1165,47 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const formattedContent = formatContent(post.content);
 
+  // Article structured data for rich snippets in Google Search
+  const articleStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.seoDescription || post.excerpt,
+    image: post.featuredImage,
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    author: {
+      "@type": "Organization",
+      name: post.author,
+      url: siteUrl,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Bubble Wrap Shop",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/logo.jpg`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blog/${slug}`,
+    },
+    keywords: post.tags.join(", "),
+    articleSection: post.category,
+    wordCount: post.content.split(/\s+/).length,
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-emerald-50 via-white to-teal-50">
+      {/* Article Structured Data for Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleStructuredData),
+        }}
+      />
+
       {/* Breadcrumbs */}
       <div className="relative z-10 border-b border-emerald-200/30 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-6">

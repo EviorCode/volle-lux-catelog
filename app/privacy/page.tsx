@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/common";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy - Bubble Wrap Shop UK",
+  description:
+    "Learn how Bubble Wrap Shop protects your personal data. Our privacy policy covers data collection, usage, cookies, and your rights under UK GDPR.",
+  openGraph: {
+    title: "Privacy Policy | Bubble Wrap Shop",
+    description:
+      "How Bubble Wrap Shop protects your personal data and privacy.",
+    url: `${siteUrl}/privacy`,
+  },
+  alternates: {
+    canonical: `${siteUrl}/privacy`,
+  },
+};
 
 export default function PrivacyPolicyPage() {
   return (
@@ -694,8 +713,9 @@ export default function PrivacyPolicyPage() {
                   >
                     sales@bubblewrapshop.co.uk
                   </a>{" "}
-                  or contact us at Bubble wrap shop (Blackburn) Limited, Unit BR16
-                  Blakewater Road, Blackburn, England, BB1 5QF, United Kingdom.
+                  or contact us at Bubble wrap shop (Blackburn) Limited, Unit
+                  BR16 Blakewater Road, Blackburn, England, BB1 5QF, United
+                  Kingdom.
                 </p>
               </div>
             </section>

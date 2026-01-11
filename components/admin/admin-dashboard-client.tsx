@@ -82,7 +82,7 @@ export function AdminDashboardClient({
       case "b2b-requests":
         return <B2BRequestsTab requests={initialB2BRequests} />;
       case "analytics":
-        return <AnalyticsTab orders={initialOrders} stats={initialStats} />;
+        return <AnalyticsTab />;
       default:
         return <DashboardTab stats={initialStats} orders={initialOrders} />;
     }

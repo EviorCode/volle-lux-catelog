@@ -83,10 +83,9 @@ export default function Home() {
       email: "sales@bubblewrapshop.co.uk",
     },
     sameAs: [
-      // Add social media links when available
-      // "https://www.facebook.com/bubblewrapshop",
-      // "https://www.twitter.com/bubblewrapshop",
-      // "https://www.linkedin.com/company/bubblewrapshop",
+      "https://www.facebook.com/bubblewrapshop",
+      "https://www.instagram.com/bubblewrapshop",
+      "https://www.linkedin.com/company/bubblewrapshop",
     ],
     address: {
       "@type": "PostalAddress",

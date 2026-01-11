@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/common";
-import { FileText, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+
+export const metadata: Metadata = {
+  title: "Refund Policy - Bubble Wrap Shop UK",
+  description:
+    "Our refund and returns policy for packaging supplies. Clear guidelines on returns, exchanges, and refunds for bubble wrap, boxes, and packaging materials.",
+  openGraph: {
+    title: "Refund Policy | Bubble Wrap Shop",
+    description:
+      "Refund and returns policy for packaging supplies at Bubble Wrap Shop UK.",
+    url: `${siteUrl}/refund-policy`,
+  },
+  alternates: {
+    canonical: `${siteUrl}/refund-policy`,
+  },
+};
 
 export default function RefundPolicyPage() {
   return (

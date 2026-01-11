@@ -111,7 +111,7 @@ export async function signUp(data: SignUpData): Promise<AuthResult> {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-      const response = await fetch("/api/auth/create-profile", {
+      await fetch("/api/auth/create-profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,7 +153,7 @@ export async function signUp(data: SignUpData): Promise<AuthResult> {
 
     // Try to fetch profile with retry
     for (let i = 0; i < 2; i++) {
-      const { data: fetchedProfile, error: fetchError } = await supabase
+      const { data: fetchedProfile } = await supabase
         .from("users")
         .select("*")
         .eq("id", authData.user.id)
@@ -364,11 +364,12 @@ export async function verifyOTP(data: VerifyOTPData): Promise<AuthResult> {
     const supabase = createClient();
 
     // Verify OTP
-    const { data: authData, error: verifyError } = await supabase.auth.verifyOtp({
-      email: data.email,
-      token: data.token,
-      type: data.type || "signup",
-    });
+    const { data: authData, error: verifyError } =
+      await supabase.auth.verifyOtp({
+        email: data.email,
+        token: data.token,
+        type: data.type || "signup",
+      });
 
     if (verifyError) {
       return {

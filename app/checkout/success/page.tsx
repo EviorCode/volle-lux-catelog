@@ -4,13 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Package,
-  Home,
-  Loader2,
-  AlertCircle,
-  Download,
-} from "lucide-react";
+import { Package, Home, Loader2, AlertCircle, Download } from "lucide-react";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useEffect, useState } from "react";
@@ -141,7 +135,7 @@ function CheckoutSuccessContent() {
           try {
             await clearCart(user?.id);
             setCartCleared(true);
-          } catch (cartError) {
+          } catch {
             // Don't fail if cart clearing fails (it may already be cleared by webhook)
             setCartCleared(true); // Mark as cleared to prevent retries
           }
@@ -392,13 +386,19 @@ function CheckoutSuccessContent() {
                     <>
                       {" "}
                       <span className="text-xs">
-                        ({SHIPPING_OPTIONS.find(opt => opt.id === orderData.shippingMethod)?.name || orderData.shippingMethod})
+                        (
+                        {SHIPPING_OPTIONS.find(
+                          (opt) => opt.id === orderData.shippingMethod
+                        )?.name || orderData.shippingMethod}
+                        )
                       </span>
                     </>
                   )}
                 </span>
                 <span className="text-gray-900">
-                  {orderData.shipping === 0 ? 'Free' : `£${orderData.shipping.toFixed(2)}`}
+                  {orderData.shipping === 0
+                    ? "Free"
+                    : `£${orderData.shipping.toFixed(2)}`}
                 </span>
               </div>
               {orderData.vatAmount && orderData.vatAmount > 0 && (
