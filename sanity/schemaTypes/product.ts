@@ -193,14 +193,29 @@ export const product = defineType({
       name: "seoTitle",
       title: "SEO Title",
       type: "string",
-      description: "Custom title for search engines",
+      description:
+        "Custom title for search engines (50-60 chars). Include PRIMARY keyword first.",
+      validation: (Rule) => Rule.max(70),
     }),
     defineField({
       name: "seoDescription",
       title: "SEO Description",
       type: "text",
       rows: 2,
-      description: "Custom description for search engines",
+      description:
+        "Custom description for search engines (150-160 chars). Include PRIMARY + SECONDARY keywords naturally.",
+      validation: (Rule) => Rule.max(170),
+    }),
+    defineField({
+      name: "seoKeywords",
+      title: "SEO Keywords",
+      type: "array",
+      of: [{ type: "string" }],
+      options: {
+        layout: "tags",
+      },
+      description:
+        "Add 5-10 keywords. First 1-2 should be PRIMARY keywords, rest are SECONDARY.",
     }),
   ],
   preview: {

@@ -18,6 +18,7 @@ export interface SanityProduct {
   tags?: string[];
   seoTitle?: string;
   seoDescription?: string;
+  seoKeywords?: string[];
   delivery?: string;
   category?: {
     _id: string;
@@ -98,6 +99,10 @@ export interface SanityCategory {
   };
   isActive: boolean;
   sortOrder: number;
+  // SEO fields
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
 }
 
 export interface SanityBanner {
@@ -244,6 +249,7 @@ export function transformSanityProduct(sanityProduct: SanityProduct) {
     delivery: sanityProduct.delivery,
     seoTitle: sanityProduct.seoTitle,
     seoDescription: sanityProduct.seoDescription,
+    seoKeywords: sanityProduct.seoKeywords,
   };
 }
 
@@ -263,6 +269,10 @@ export function transformSanityCategory(sanityCategory: SanityCategory) {
     imageAlt: categoryImageAlt,
     isActive: sanityCategory.isActive,
     sortOrder: sanityCategory.sortOrder,
+    // SEO fields
+    seoTitle: sanityCategory.seoTitle,
+    seoDescription: sanityCategory.seoDescription,
+    seoKeywords: sanityCategory.seoKeywords,
   };
 }
 

@@ -3,51 +3,126 @@ import { ProductFilters } from "@/components/products/product-filters";
 import { ProductSort } from "@/components/products/product-sort";
 import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import { ProductGridWrapper } from "@/components/products/product-grid-wrapper";
-import { getAllCategories } from "@/sanity/lib";
+import { getAllCategories, getCategoryBySlug } from "@/sanity/lib";
 
 // Revalidation strategy: On-demand revalidation via Sanity webhooks
 // Pages will only revalidate when content changes in Sanity CMS
 // For development, use `npm run dev` which has hot reloading
 export const revalidate = false;
 
-/**
- * Products Page Metadata
- * SEO optimization for the products listing page
- */
-// Note: For category-specific metadata, we'd need generateMetadata function
-// but since categories are query params, we'll use static metadata for now
-export const metadata: Metadata = {
+const siteUrl = "https://bubblewrapshop.co.uk";
+
+// Default metadata for /products page (no category filter)
+const defaultMetadata = {
   title: "All Packaging Supplies UK | Buy Online | Bubble Wrap Shop",
   description:
-    "Browse our complete range of packaging supplies in the UK. Buy bubble wrap, cardboard boxes, packing tape, shipping boxes, and protective packaging materials online. Automatic bulk pricing. Next day delivery packaging supplies UK. Cheap bubble wrap online. Buy cardboard boxes UK with wholesale pricing available.",
+    "Browse our complete range of packaging supplies in the UK. Buy bubble wrap, cardboard boxes, packing tape, shipping boxes, and protective packaging materials online. Wholesale pricing. Next day delivery.",
   keywords: [
     "packaging supplies UK",
-    "packaging products UK",
     "bubble wrap UK",
-    "packaging boxes UK",
     "cardboard boxes UK",
     "packing tape UK",
     "shipping boxes UK",
     "protective packaging UK",
-    "eco-friendly packaging UK",
-    "bulk packaging",
     "wholesale packaging UK",
     "buy packaging online",
-    "packaging materials UK",
-    "next day delivery packaging",
   ],
-  openGraph: {
-    type: "website",
-    title: "All Packaging Supplies UK | Buy Online | Bubble Wrap Shop",
-    description:
-      "Browse our complete range of packaging supplies in the UK. Bubble wrap, cardboard boxes, packing tape, and more. Automatic bulk pricing. Next day delivery available.",
-    url: `${process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk"}/products`,
-    siteName: "Bubble Wrap Shop - Premium Packaging Supplies",
-  },
-  alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk"}/products`,
-  },
 };
+
+/**
+ * Dynamic Metadata for Products Page
+ * Generates unique SEO meta tags based on category filter
+ * This helps each category URL (/products?category=bubble-wrap) rank separately
+ */
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  const categorySlug = sp.category;
+
+  // If no category, return default metadata
+  if (!categorySlug) {
+    return {
+      title: defaultMetadata.title,
+      description: defaultMetadata.description,
+      keywords: defaultMetadata.keywords,
+      openGraph: {
+        type: "website",
+        title: defaultMetadata.title,
+        description: defaultMetadata.description,
+        url: `${siteUrl}/products`,
+        siteName: "Bubble Wrap Shop",
+        images: [`${siteUrl}/og-image.jpg`],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: defaultMetadata.title,
+        description: defaultMetadata.description,
+        images: [`${siteUrl}/og-image.jpg`],
+      },
+      alternates: {
+        canonical: `${siteUrl}/products`,
+      },
+    };
+  }
+
+  // Fetch category data with SEO fields
+  const category = await getCategoryBySlug(categorySlug);
+
+  // Generate display name for fallback
+  const categoryDisplayName = categorySlug
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+
+  // Use custom SEO fields from Sanity, or generate defaults
+  const seoTitle =
+    category?.seoTitle ||
+    `${categoryDisplayName} UK | Buy Online | Bubble Wrap Shop`;
+
+  const seoDescription =
+    category?.seoDescription ||
+    `Buy ${categoryDisplayName.toLowerCase()} online UK. Premium packaging supplies with wholesale pricing. Fast delivery across the UK. Order today!`;
+
+  const seoKeywords = category?.seoKeywords?.length
+    ? category.seoKeywords
+    : [
+        `${categoryDisplayName.toLowerCase()} UK`,
+        `buy ${categoryDisplayName.toLowerCase()} online`,
+        categoryDisplayName.toLowerCase(),
+        "packaging supplies UK",
+        "wholesale packaging",
+      ];
+
+  const pageUrl = `${siteUrl}/products?category=${categorySlug}`;
+
+  return {
+    title: seoTitle,
+    description: seoDescription,
+    keywords: seoKeywords,
+    openGraph: {
+      type: "website",
+      title: seoTitle,
+      description: seoDescription,
+      url: pageUrl,
+      siteName: "Bubble Wrap Shop",
+      images: category?.image
+        ? [{ url: category.image, alt: category.imageAlt }]
+        : [`${siteUrl}/og-image.jpg`],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seoTitle,
+      description: seoDescription,
+      images: category?.image ? [category.image] : [`${siteUrl}/og-image.jpg`],
+    },
+    alternates: {
+      canonical: pageUrl,
+    },
+  };
+}
 
 export default async function ProductsPage({
   searchParams,

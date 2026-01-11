@@ -63,22 +63,21 @@ export async function generateMetadata({
     product.seoDescription ||
     `Buy ${product.name} online. ${product.category || "Packaging supplies"} from £${productPrice}. Fast UK delivery, wholesale pricing, eco-friendly options. Order today!`;
 
-  // Generate comprehensive keywords based on product
-  const productKeywords = [
-    product.name,
-    `${product.name} UK`,
-    "packaging supplies",
-    "packaging supplies UK",
-    product.category || "packaging",
-    `${product.category || "packaging"} UK`,
-    "bulk packaging",
-    "wholesale packaging",
-    "wholesale packaging UK",
-    "next day delivery",
-    "UK packaging supplier",
-    "buy packaging online",
-    "packaging materials UK",
-  ];
+  // Use custom keywords from Sanity if available, otherwise auto-generate
+  const productKeywords = product.seoKeywords?.length
+    ? product.seoKeywords
+    : [
+        // PRIMARY keywords (first 2)
+        product.name,
+        `${product.name} UK`,
+        // SECONDARY keywords
+        product.category || "packaging",
+        `${product.category || "packaging"} UK`,
+        "packaging supplies UK",
+        "wholesale packaging",
+        "bulk packaging UK",
+        "buy online UK",
+      ];
 
   return {
     title: seoTitle,

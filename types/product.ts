@@ -41,4 +41,5 @@ export interface Product {
   delivery?: string; // Delivery information
   seoTitle?: string; // Custom SEO title
   seoDescription?: string; // Custom SEO description
+  seoKeywords?: string[]; // Custom SEO keywords (PRIMARY first, then SECONDARY)
 }

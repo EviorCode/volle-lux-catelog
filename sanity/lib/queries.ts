@@ -20,6 +20,7 @@ export const PRODUCT_QUERY = `
   tags,
   seoTitle,
   seoDescription,
+  seoKeywords,
   delivery,
   category-> {
     _id,
@@ -153,7 +154,10 @@ export const CATEGORY_QUERY = `
     alt
   },
   isActive,
-  sortOrder
+  sortOrder,
+  seoTitle,
+  seoDescription,
+  seoKeywords
 `;
 
 // All products query
@@ -304,4 +308,3 @@ export const HOMEPAGE_DATA_QUERY = `{
     ${PRODUCT_LISTING_QUERY}
   }
 }`;
-

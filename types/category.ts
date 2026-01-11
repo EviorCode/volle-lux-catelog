@@ -7,4 +7,8 @@ export interface Category {
   imageAlt?: string; // Alt text for category image (SEO)
   isActive?: boolean;
   sortOrder?: number;
+  // SEO fields
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
 }

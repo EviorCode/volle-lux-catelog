@@ -57,6 +57,44 @@ export const category = defineType({
       initialValue: 0,
       description: "Lower numbers appear first",
     }),
+    // SEO Fields
+    defineField({
+      name: "seoTitle",
+      title: "SEO Title",
+      type: "string",
+      description:
+        "Custom title for search engines (50-60 chars). Include PRIMARY keyword. E.g., 'Bubble Wrap UK | Buy Online | Bubble Wrap Shop'",
+      validation: (Rule) => Rule.max(70),
+      group: "seo",
+    }),
+    defineField({
+      name: "seoDescription",
+      title: "SEO Description",
+      type: "text",
+      rows: 3,
+      description:
+        "Custom description for search engines (150-160 chars). Include PRIMARY + SECONDARY keywords naturally.",
+      validation: (Rule) => Rule.max(170),
+      group: "seo",
+    }),
+    defineField({
+      name: "seoKeywords",
+      title: "SEO Keywords",
+      type: "array",
+      of: [{ type: "string" }],
+      options: {
+        layout: "tags",
+      },
+      description:
+        "Add 5-10 keywords. First 1-2 should be PRIMARY keywords (e.g., 'bubble wrap UK'), rest are SECONDARY.",
+      group: "seo",
+    }),
+  ],
+  groups: [
+    {
+      name: "seo",
+      title: "SEO Settings",
+    },
   ],
   preview: {
     select: {
