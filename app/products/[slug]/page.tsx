@@ -47,18 +47,21 @@ export async function generateMetadata({
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+  const siteUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
   const productImage = product.images?.[0] || product.image;
   const productPrice = product.basePrice.toFixed(2);
 
   // Use custom SEO fields if available, otherwise generate from product data
+  // Title: 50-60 chars optimal for Google
   const seoTitle =
-    product.seoTitle ||
-    `${product.name} UK | Buy Online | Packaging Supplies | Bubble Wrap Shop`;
+    product.seoTitle || `${product.name} | Buy Online UK | Bubble Wrap Shop`;
+
+  // Description: 150-160 chars optimal for Google
   const seoDescription =
     product.seoDescription ||
-    `Buy ${product.name} online in the UK. Professional packaging supplies with bulk pricing. Starting from £${productPrice}. Next day delivery available. ${product.category ? `Part of our ${product.category} range.` : ""}`;
+    `Buy ${product.name} online. ${product.category || "Packaging supplies"} from £${productPrice}. Fast UK delivery, wholesale pricing, eco-friendly options. Order today!`;
 
   // Generate comprehensive keywords based on product
   const productKeywords = [
@@ -82,17 +85,17 @@ export async function generateMetadata({
     description: seoDescription,
     keywords: productKeywords,
     openGraph: {
-      type: "website",
+      type: "website", // Note: "product" type requires additional og:product tags
       title: seoTitle,
       description: seoDescription,
       url: productUrl,
-      siteName: "Bubble Wrap Shop - Premium Packaging Supplies",
+      siteName: "Bubble Wrap Shop",
       images: [
         {
           url: productImage,
           width: 1200,
           height: 630,
-          alt: product.name,
+          alt: `${product.name} - Packaging Supplies UK`,
         },
       ],
     },
@@ -105,11 +108,13 @@ export async function generateMetadata({
     alternates: {
       canonical: productUrl,
     },
+    // Product meta tags for rich results
     other: {
       "product:price:amount": productPrice,
       "product:price:currency": "GBP",
       "product:availability": "in stock",
       "product:condition": "new",
+      "product:brand": "Bubble Wrap Shop",
     },
   };
 }
@@ -127,7 +132,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
     ? await getProductsByCategorySlug(product.categorySlug)
     : [];
 
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+  const siteUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
   const productPrice = product.basePrice.toFixed(2);
 
