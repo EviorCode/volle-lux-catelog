@@ -96,8 +96,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated, user, loading, initializeCart]);
 
   // Set up Supabase Realtime subscription for authenticated users
+  // Use user.id as dependency instead of entire user object to prevent re-subscription loops
+  const userId = user?.id;
+  
   useEffect(() => {
-    if (!isAuthenticated || !user) {
+    // Don't set up subscription if not authenticated or no user ID
+    if (!isAuthenticated || !userId) {
       // Clean up any existing subscription when logged out
       if (subscriptionRef.current) {
         console.log("Cleaning up Realtime subscription");
@@ -107,29 +111,34 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Prevent duplicate subscriptions for same user
+    if (subscriptionRef.current) {
+      console.log("Realtime subscription already exists, skipping setup");
+      return;
+    }
+
     // Subscribe to cart changes in real-time
     const supabase = createClient();
     
-    console.log("Setting up Realtime subscription for user:", user.id);
+    console.log("Setting up Realtime subscription for user:", userId);
     
     const subscription = supabase
-      .channel(`cart-changes-${user.id}`)
+      .channel(`cart-changes-${userId}`)
       .on(
         "postgres_changes",
         {
           event: "*", // Listen to all events (INSERT, UPDATE, DELETE)
           schema: "public",
           table: "carts",
-          filter: `user_id=eq.${user.id}`,
+          filter: `user_id=eq.${userId}`,
         },
         async (payload) => {
           console.log("Cart changed via Realtime:", payload);
           
-          // Only reload if this wasn't triggered by our own update
-          // (to avoid reloading immediately after we just synced)
+          // Reload cart from Supabase on any change
           try {
             const { loadCartFromSupabase } = await import("@/services/cart/cart.service");
-            const cartItems = await loadCartFromSupabase(user.id);
+            const cartItems = await loadCartFromSupabase(userId);
             
             // Update cart directly without calling initializeCart (which checks isInitialized)
             useCartStore.setState({
@@ -148,13 +157,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     subscriptionRef.current = subscription as unknown as Subscription;
 
-    // Cleanup on unmount or when auth changes
+    // Cleanup on unmount or when user changes
     return () => {
       console.log("Unsubscribing from Realtime cart changes");
       subscription.unsubscribe();
       subscriptionRef.current = null;
     };
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, userId]);
 
   // Handle logout - keep localStorage cart, just reset initialized flag
   useEffect(() => {

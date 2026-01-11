@@ -106,7 +106,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                     preload={index === 0 ? "auto" : "none"}
                     // LCP optimization: fetchpriority="high" for first video
                     // @ts-expect-error - fetchPriority is valid HTML but not in React types yet
-                    fetchpriority={index === 0 ? "high" : "auto"}
+                    fetchPriority={index === 0 ? "high" : "auto"}
                   />
                 ) : (
                   <Image
