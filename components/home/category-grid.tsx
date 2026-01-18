@@ -7,7 +7,7 @@ export async function CategoryGrid() {
   const categories = await getAllCategories();
 
   return (
-    <section className="relative bg-linear-to-br from-emerald-600 to-teal-600 py-16 md:py-20 lg:py-24 overflow-hidden">
+    <section className="relative mt-10 bg-linear-to-br from-emerald-600 to-teal-600 py-16 md:py-20 lg:py-24 overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-10 w-72 h-72 bg-emerald-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
