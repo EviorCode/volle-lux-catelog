@@ -61,11 +61,11 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [mounted, setMounted] = useState(false);
 
-  // Helper to check if a nav link is active
-  const isActiveLink = (href: string) => {
+  // Helper to check if a nav link is active - memoized to prevent re-renders
+  const isActiveLink = useCallback((href: string) => {
     if (href === "/products") return pathname?.startsWith("/products");
     return pathname === href;
-  };
+  }, [pathname]);
 
   const { getItemCount } = useCartStore();
   const { user, isAuthenticated, signOut, loading: authLoading } = useAuth();
@@ -120,6 +120,11 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
       setIsMegaMenuOpen(false);
       setActiveCategory(null);
     }, 150);
+  }, []);
+
+  // Memoized callback for closing mobile menu
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
   }, []);
 
   return (
@@ -279,11 +284,11 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     className="h-5 w-5 group-hover:scale-110 transition-transform"
                     strokeWidth={2}
                   />
-                  {mounted && cartItemCount > 0 && (
+                  {mounted && cartItemCount > 0 ? (
                     <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-r from-orange-600 to-red-600 text-[10px] font-bold text-white shadow-lg">
                       {cartItemCount > 9 ? "9+" : cartItemCount}
                     </span>
-                  )}
+                  ) : null}
                 </button>
               </MiniCart>
 
@@ -412,14 +417,14 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
         <div className="fixed inset-0 z-40 lg:hidden">
           <div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setIsMobileMenuOpen(false)}
+            onClick={closeMobileMenu}
           />
           <div className="absolute right-0 top-0 bottom-0 w-80 bg-linear-to-b from-white to-emerald-50 overflow-y-auto shadow-2xl">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <span className="text-sm font-bold text-gray-900">Menu</span>
                 <button
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                   className="p-2 hover:bg-emerald-100 rounded-lg transition-colors"
                 >
                   <X className="h-6 w-6 text-gray-900" />
@@ -465,7 +470,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 <Link
                   href="/auth/login"
                   className="mb-6 flex h-10 items-center justify-center rounded-lg bg-linear-to-r from-emerald-600 to-teal-600 text-sm font-semibold text-white hover:shadow-lg transition-all"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                 >
                   Sign In
                 </Link>
@@ -475,7 +480,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 <Link
                   href="/products"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                 >
                   <Package className="h-4 w-4" />
                   All Products
@@ -489,7 +494,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     key={category.id}
                     href={`/products?category=${category.slug}`}
                     className="rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors flex items-center gap-3"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={closeMobileMenu}
                   >
                     {category.image && (
                       <Image
@@ -510,28 +515,28 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 <Link
                   href="/b2b-request"
                   className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-emerald-100 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                 >
                   B2B Request
                 </Link>
                 <Link
                   href="/sustainability"
                   className="block rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                 >
                   Sustainability
                 </Link>
                 <Link
                   href="/about"
                   className="block rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                 >
                   About
                 </Link>
                 <Link
                   href="/contact"
                   className="block rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                 >
                   Contact
                 </Link>
@@ -541,20 +546,20 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 <>
                   <div className="my-4 border-t border-emerald-200" />
                   <nav className="space-y-1">
-                    {user?.role === "admin" && (
+                    {user?.role === "admin" ? (
                       <Link
                         href="/admin"
                         className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-colors font-semibold shadow-md mb-1"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        onClick={closeMobileMenu}
                       >
                         <ShieldCheck className="h-4 w-4" />
                         Admin Dashboard
                       </Link>
-                    )}
+                    ) : null}
                     <Link
                       href="/account"
                       className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={closeMobileMenu}
                     >
                       <Settings className="h-4 w-4 text-emerald-600" />
                       Account
@@ -562,7 +567,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     <Link
                       href="/account/orders"
                       className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-emerald-100 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={closeMobileMenu}
                     >
                       <Package className="h-4 w-4 text-emerald-600" />
                       Orders
@@ -570,7 +575,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     <button
                       onClick={() => {
                         handleSignOut();
-                        setIsMobileMenuOpen(false);
+                        closeMobileMenu();
                       }}
                       className="flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm hover:bg-red-100 text-red-600 transition-colors"
                     >

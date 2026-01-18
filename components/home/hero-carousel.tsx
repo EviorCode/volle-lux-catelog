@@ -25,49 +25,69 @@ interface HeroCarouselProps {
   banners: Banner[];
 }
 
+// Transition duration constant - sync JS timeout with CSS duration
+const TRANSITION_DURATION = 700;
+
 export function HeroCarousel({ banners }: HeroCarouselProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const isTransitioningRef = useRef(false);
 
   const nextSlide = useCallback(() => {
-    if (!banners || banners.length === 0 || isTransitioning) return;
+    if (!banners || banners.length === 0 || isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev + 1) % banners.length);
-    setTimeout(() => setIsTransitioning(false), 500);
-  }, [banners, isTransitioning]);
+    setTimeout(() => {
+      setIsTransitioning(false);
+      isTransitioningRef.current = false;
+    }, TRANSITION_DURATION);
+  }, [banners]);
 
   const prevSlide = useCallback(() => {
-    if (!banners || banners.length === 0 || isTransitioning) return;
+    if (!banners || banners.length === 0 || isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
-    setTimeout(() => setIsTransitioning(false), 500);
-  }, [banners, isTransitioning]);
+    setTimeout(() => {
+      setIsTransitioning(false);
+      isTransitioningRef.current = false;
+    }, TRANSITION_DURATION);
+  }, [banners]);
 
-  const goToSlide = (index: number) => {
-    if (isTransitioning || index === currentSlide) return;
+  const goToSlide = useCallback((index: number) => {
+    if (isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
     setIsTransitioning(true);
     setCurrentSlide(index);
-    setTimeout(() => setIsTransitioning(false), 500);
-  };
+    setTimeout(() => {
+      setIsTransitioning(false);
+      isTransitioningRef.current = false;
+    }, TRANSITION_DURATION);
+  }, []);
 
-  // Touch/swipe support
-  const handleTouchStart = (e: React.TouchEvent) => {
+  // Touch/swipe support - memoized handlers
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
-  };
+  }, []);
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
-  };
+  }, []);
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = useCallback(() => {
     const diff = touchStartX.current - touchEndX.current;
     const threshold = 50;
     if (diff > threshold) nextSlide();
     else if (diff < -threshold) prevSlide();
-  };
+  }, [nextSlide, prevSlide]);
+
+  // Memoized autoplay handlers
+  const pauseAutoPlay = useCallback(() => setIsAutoPlaying(false), []);
+  const resumeAutoPlay = useCallback(() => setIsAutoPlaying(true), []);
 
   // Keyboard navigation
   useEffect(() => {
@@ -92,8 +112,8 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
       {/* Main Carousel */}
       <div
         className="relative z-10 mx-auto max-w-[1600px] px-3 sm:px-4 md:px-6 lg:px-8 pt-4 sm:pt-6 md:pt-8 lg:pt-10"
-        onMouseEnter={() => setIsAutoPlaying(false)}
-        onMouseLeave={() => setIsAutoPlaying(true)}
+        onMouseEnter={pauseAutoPlay}
+        onMouseLeave={resumeAutoPlay}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -144,7 +164,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
                 {/* Content */}
-                {(banner.title || banner.description) && (
+                {(banner.title || banner.description) ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8">
                     <div className="text-center w-full max-w-4xl">
                       <div
@@ -154,16 +174,16 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                             : "translate-y-8 opacity-0"
                         }`}
                       >
-                        {banner.title && (
+                        {banner.title ? (
                           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent mb-3 md:mb-4 tracking-tight">
                             {banner.title}
                           </h2>
-                        )}
-                        {banner.description && (
+                        ) : null}
+                        {banner.description ? (
                           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 font-light max-w-2xl mx-auto mb-6 md:mb-8">
                             {banner.description}
                           </p>
-                        )}
+                        ) : null}
                         <Link
                           href="/products"
                           className="inline-flex items-center px-6 sm:px-8 py-2.5 sm:py-3 bg-white text-emerald-600 rounded-full font-semibold text-sm sm:text-base hover:bg-emerald-50 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -173,13 +193,13 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                       </div>
                     </div>
                   </div>
-                )}
+                ) : null}
               </div>
             );
           })}
 
           {/* Navigation Arrows */}
-          {banners.length > 1 && (
+          {banners.length > 1 ? (
             <>
               <button
                 onClick={prevSlide}
@@ -217,7 +237,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                 ))}
               </div>
             </>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
