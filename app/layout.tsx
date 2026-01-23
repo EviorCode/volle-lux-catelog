@@ -8,7 +8,7 @@ import { CartProvider } from "@/components/cart/cart-provider";
 import { getAllCategories } from "@/sanity/lib";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
-
+import FacebookPixel from "@/components/meta/FacebookPixel";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -161,6 +161,7 @@ export default async function RootLayout({
           <CartProvider>
             <WebsiteLayoutWrapper categories={categories || []}>
               {children}
+              <FacebookPixel />
             </WebsiteLayoutWrapper>
 
             {/* Optimized Wrapper: Only loads listener in Draft Mode */}
