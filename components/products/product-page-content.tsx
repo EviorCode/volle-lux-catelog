@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import {
   ProductPurchaseSection,
   ProductInfoAccordion,
 } from "@/components/products";
+import * as pixel from "@/lib/meta/fpixel";
 import type { Product } from "@/types/product";
 
 /**
@@ -22,6 +24,17 @@ function ProductPageContent({
   specifications?: Record<string, string>;
   delivery?: string;
 }) {
+  // Track ViewContent event for Meta Pixel
+  useEffect(() => {
+    pixel.viewContent({
+      content_name: product.name,
+      content_ids: [product.id],
+      content_type: "product",
+      value: product.basePrice,
+      currency: "GBP",
+    });
+  }, [product.id, product.name, product.basePrice]);
+
   return (
     <ErrorBoundary
       title="Unable to Load Product Details"

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Package, Home, Loader2, AlertCircle, Download } from "lucide-react";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useEffect, useState } from "react";
+import * as pixel from "@/lib/meta/fpixel";
 import type { Order } from "@/types/cart";
 import { SHIPPING_OPTIONS } from "@/types/shipping";
 
@@ -22,6 +23,7 @@ function CheckoutSuccessContent() {
   const [error, setError] = useState<string | null>(null);
   const [cartCleared, setCartCleared] = useState(false);
   const [downloadingReceipt, setDownloadingReceipt] = useState(false);
+  const purchaseTracked = useRef(false);
 
   // Verify payment and fetch order with retry logic
   useEffect(() => {
@@ -128,6 +130,22 @@ function CheckoutSuccessContent() {
 
         setOrder(orderData);
         setLoading(false); // Set loading to false immediately after setting order
+
+        // Track Purchase event for Meta Pixel (only once)
+        if (!purchaseTracked.current) {
+          purchaseTracked.current = true;
+          pixel.purchase({
+            content_ids: orderData.items.map((item: { product?: { id?: string }; quantity?: number }) => item.product?.id || ""),
+            contents: orderData.items.map((item: { product?: { id?: string }; quantity?: number }) => ({
+              id: item.product?.id || "",
+              quantity: item.quantity || 1,
+            })),
+            content_type: "product",
+            num_items: orderData.items.reduce((sum: number, item: { quantity?: number }) => sum + (item.quantity || 1), 0),
+            value: orderData.total,
+            currency: "GBP",
+          });
+        }
 
         // Clear cart after confirming payment success (only once)
         // Note: Cart should already be cleared by webhook, this is a failsafe

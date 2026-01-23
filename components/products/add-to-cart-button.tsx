@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Check } from "lucide-react";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { useAuth } from "@/components/auth/auth-provider";
+import * as pixel from "@/lib/meta/fpixel";
 import { Product, ProductVariant } from "@/types/product";
 
 interface AddToCartButtonProps {
@@ -27,6 +28,10 @@ export function AddToCartButton({
   const { user } = useAuth();
 
   const handleClick = async () => {
+    // Calculate the actual price for this cart addition
+    const pricePerUnit = quantityOptionPrice ?? product.basePrice;
+    const totalValue = pricePerUnit * quantity;
+
     await addItem(
       product,
       variant,
@@ -34,8 +39,17 @@ export function AddToCartButton({
       user?.id,
       quantityOptionPrice
     );
-    setIsAdded(true);
 
+    // Track AddToCart event for Meta Pixel
+    pixel.addToCart({
+      content_name: variant ? `${product.name} - ${variant.name}` : product.name,
+      content_ids: [product.id],
+      content_type: "product",
+      value: totalValue,
+      currency: "GBP",
+    });
+
+    setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
 

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { useAuth } from "@/components/auth/auth-provider";
+import * as pixel from "@/lib/meta/fpixel";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -71,11 +72,29 @@ function CheckoutPageContent() {
   const [guestEmail, setGuestEmail] = useState("");
 
   const summary = getCartSummaryWithShipping();
+  const checkoutTracked = useRef(false);
 
   useEffect(() => {
     addressesLoadedRef.current = false;
     lastUserIdRef.current = null;
   }, []);
+
+  // Track InitiateCheckout event for Meta Pixel (only once)
+  useEffect(() => {
+    if (items.length > 0 && !checkoutTracked.current) {
+      checkoutTracked.current = true;
+      pixel.initiateCheckout({
+        content_ids: items.map((item) => item.product.id),
+        contents: items.map((item) => ({
+          id: item.product.id,
+          quantity: item.quantity,
+        })),
+        num_items: items.reduce((sum, item) => sum + item.quantity, 0),
+        value: summary.total,
+        currency: "GBP",
+      });
+    }
+  }, [items, summary.total]);
 
   useEffect(() => {
     if (items.length === 0) {
