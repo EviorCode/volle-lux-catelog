@@ -2,17 +2,17 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { ProductGallerySkeleton } from "@/components/products/product-gallery-loader";
-import { ProductHeader, RelatedProducts } from "@/components/products";
+import { RelatedProducts } from "@/components/products";
 import ProductPageContent from "@/components/products/product-page-content";
+import { Breadcrumbs } from "@/components/common/breadcrumbs";
 import {
   getProductBySlug,
   getProductsByCategorySlug,
 } from "@/services/products/product.service";
 import { getProductSlugs } from "@/sanity/lib/api";
 import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
 
 // PERFORMANCE: Code split ProductGallery (heavy image component)
 const ProductGallery = dynamic(
@@ -54,37 +54,32 @@ export async function generateMetadata({
   const productPrice = product.basePrice.toFixed(2);
 
   // Use custom SEO fields if available, otherwise generate from product data
-  // Title: 50-60 chars optimal for Google
   const seoTitle =
     product.seoTitle || `${product.name} | Buy Online UK | Bubble Wrap Shop`;
 
-  // Description: 150-160 chars optimal for Google
   const seoDescription =
     product.seoDescription ||
     `Buy ${product.name} online. ${product.category || "Packaging supplies"} from £${productPrice}. Fast UK delivery, wholesale pricing, eco-friendly options. Order today!`;
 
-  // Use custom keywords from Sanity if available, otherwise auto-generate
   const productKeywords = product.seoKeywords?.length
     ? product.seoKeywords
     : [
-        // PRIMARY keywords (first 2)
-        product.name,
-        `${product.name} UK`,
-        // SECONDARY keywords
-        product.category || "packaging",
-        `${product.category || "packaging"} UK`,
-        "packaging supplies UK",
-        "wholesale packaging",
-        "bulk packaging UK",
-        "buy online UK",
-      ];
+      product.name,
+      `${product.name} UK`,
+      product.category || "packaging",
+      `${product.category || "packaging"} UK`,
+      "packaging supplies UK",
+      "wholesale packaging",
+      "bulk packaging UK",
+      "buy online UK",
+    ];
 
   return {
     title: seoTitle,
     description: seoDescription,
     keywords: productKeywords,
     openGraph: {
-      type: "website", // Note: "product" type requires additional og:product tags
+      type: "website",
       title: seoTitle,
       description: seoDescription,
       url: productUrl,
@@ -107,7 +102,6 @@ export async function generateMetadata({
     alternates: {
       canonical: productUrl,
     },
-    // Product meta tags for rich results
     other: {
       "product:price:amount": productPrice,
       "product:price:currency": "GBP",
@@ -167,41 +161,47 @@ export default async function ProductPage({ params }: ProductPageProps) {
       },
     },
     category: product.category || "Packaging Supplies",
-    // NOTE: AggregateRating removed - Google penalizes fake/hardcoded ratings
-    // Add real review integration when available (e.g., Trustpilot, Reviews.io)
   };
 
+  // Breadcrumb items
+  const breadcrumbItems = [
+    { label: "Products", href: "/products" },
+    ...(product.category && product.categorySlug
+      ? [{ label: product.category, href: `/products?category=${product.categorySlug}` }]
+      : []),
+    { label: product.name },
+  ];
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Structured Data (JSON-LD) */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-8 md:py-12 lg:py-16">
-        {/* Back Button */}
-        <Link href="/products">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="mb-6 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 -ml-2"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" strokeWidth={2} />
-            Back to Products
-          </Button>
+      {/* Breadcrumb Bar */}
+      <div className="border-b border-border/30 bg-secondary/20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-3">
+          <Breadcrumbs items={breadcrumbItems} />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-8 md:py-12">
+
+        {/* Back Link */}
+        <Link
+          href="/products"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-8"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Back to products
         </Link>
 
-        {/* Product Header */}
-        <ProductHeader
-          productName={product.name}
-          productCode={product.product_code}
-          category={product.category}
-          categorySlug={product.categorySlug}
-        />
+        {/* Product Layout: 2-Column on Desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
 
-        {/* Main Content: 2-Column Layout */}
-        <div className="mt-8 md:mt-12 grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left Column: Product Gallery */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <ProductGallery
@@ -213,12 +213,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
 
           {/* Right Column: Product Info & Purchase */}
-          <ProductPageContent
-            product={product}
-            description={product.description}
-            specifications={product.specifications}
-            delivery={product.delivery}
-          />
+          <div>
+            {/* Product Title & SKU */}
+            <div className="mb-6">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight mb-2">
+                {product.name}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                SKU: <span className="font-medium text-foreground/80">{product.product_code}</span>
+              </p>
+            </div>
+
+            {/* Purchase Section & Accordion */}
+            <ProductPageContent
+              product={product}
+              description={product.description}
+              specifications={product.specifications}
+              delivery={product.delivery}
+            />
+          </div>
         </div>
 
         {/* Related Products Section */}
@@ -236,8 +249,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
 }
 
 // Revalidation strategy: On-demand revalidation via Sanity webhooks
-// Pages will only revalidate when content changes in Sanity CMS
-// For development, use `npm run dev` which has hot reloading
 export const revalidate = false;
 
 export async function generateStaticParams() {

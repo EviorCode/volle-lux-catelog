@@ -5,3 +5,4 @@ export { SustainabilityBlock } from "./sustainability-block";
 export { NewArrivals } from "./new-arrivals";
 export { FinalCTA } from "./final-cta";
 export { default as B2BBanner } from "./b2b-banner";
+export { GalleryShowcase } from "./gallery-showcase";

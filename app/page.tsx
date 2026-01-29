@@ -7,6 +7,7 @@ import {
   NewArrivals,
   FinalCTA,
   B2BBanner,
+  GalleryShowcase,
 } from "@/components/home";
 
 // Revalidation strategy: On-demand revalidation via Sanity webhooks
@@ -184,6 +185,7 @@ export default function Home() {
       <HeroSection />
       <CategoryGrid />
       <FeaturedProducts />
+      <GalleryShowcase />
       <SustainabilityBlock />
       <NewArrivals />
       <FinalCTA />

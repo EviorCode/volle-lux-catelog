@@ -1,23 +1,22 @@
 export function ProductCardSkeleton() {
   return (
-    <div className="block border border-neutral-300 p-2">
+    <div className="flex flex-col gap-3">
       {/* Image Skeleton */}
-      <div className="relative mb-3 aspect-square w-full overflow-hidden bg-neutral-300">
-        <div className="h-full w-full animate-pulse bg-neutral-300" />
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-secondary/50">
+        <div className="h-full w-full animate-pulse bg-secondary" />
       </div>
 
       {/* Product Info Skeleton */}
-      <div className="space-y-2">
-        {/* Title Skeleton - 2 lines */}
+      <div className="space-y-2 px-1">
+        {/* Title Skeleton */}
         <div className="space-y-1.5">
-          <div className="h-3.5 w-full animate-pulse rounded bg-neutral-300" />
-          <div className="h-3.5 w-4/5 animate-pulse rounded bg-neutral-300" />
+          <div className="h-3.5 w-full animate-pulse rounded-md bg-secondary" />
         </div>
 
         {/* Price Row Skeleton */}
-        <div className="flex items-center justify-between">
-          <div className="h-4 w-16 animate-pulse rounded bg-neutral-300" />
-          <div className="h-3 w-14 animate-pulse rounded bg-neutral-300" />
+        <div className="flex items-center gap-2">
+          <div className="h-4 w-16 animate-pulse rounded-md bg-secondary" />
+          <div className="h-3 w-12 animate-pulse rounded-md bg-secondary/70" />
         </div>
       </div>
     </div>

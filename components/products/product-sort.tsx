@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ArrowUpDown } from "lucide-react";
 
 interface ProductSortProps {
   currentSort: string;
@@ -30,26 +31,23 @@ export function ProductSort({ currentSort }: ProductSortProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <label
-        htmlFor="sort"
-        className="text-sm font-medium text-gray-700 hidden sm:inline-block"
-      >
-        Sort by:
-      </label>
       <Select value={currentSort} onValueChange={handleSortChange}>
         <SelectTrigger
           id="sort"
-          className="w-full sm:w-[200px] border border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 bg-white text-gray-900"
+          className="w-full sm:w-[180px] h-10 border-border/50 bg-card text-foreground text-sm font-medium focus:ring-1 focus:ring-primary/30 focus:border-primary/50"
         >
-          <SelectValue placeholder="Sort by" />
+          <div className="flex items-center gap-2">
+            <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+            <SelectValue placeholder="Sort" />
+          </div>
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="newest">Newest First</SelectItem>
-          <SelectItem value="oldest">Oldest First</SelectItem>
-          <SelectItem value="price-low">Price: Low to High</SelectItem>
-          <SelectItem value="price-high">Price: High to Low</SelectItem>
-          <SelectItem value="name-asc">Name: A to Z</SelectItem>
-          <SelectItem value="name-desc">Name: Z to A</SelectItem>
+        <SelectContent className="bg-card border-border">
+          <SelectItem value="newest" className="text-sm">Newest First</SelectItem>
+          <SelectItem value="oldest" className="text-sm">Oldest First</SelectItem>
+          <SelectItem value="price-low" className="text-sm">Price: Low to High</SelectItem>
+          <SelectItem value="price-high" className="text-sm">Price: High to Low</SelectItem>
+          <SelectItem value="name-asc" className="text-sm">Name: A to Z</SelectItem>
+          <SelectItem value="name-desc" className="text-sm">Name: Z to A</SelectItem>
         </SelectContent>
       </Select>
     </div>

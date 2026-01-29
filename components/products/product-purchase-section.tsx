@@ -7,13 +7,13 @@ import { QuantityOptionsSelector } from "./quantity-options-selector";
 import { AddToCartButton } from "./add-to-cart-button";
 import { Product, ProductVariant } from "@/types/product";
 import { calculatePricePerUnit } from "@/services/pricing/pricing.service";
+import { Truck, ShieldCheck, RotateCcw } from "lucide-react";
 
 interface ProductPurchaseSectionProps {
   product: Product;
 }
 
 // Helper function to get the first/lowest quantity option
-// Skips quantity = 1 options (they're hidden from display but used for discount calculations)
 function getFirstQuantityOption(
   quantityOptions?: ProductVariant["quantityOptions"]
 ): { quantity: number; pricePerUnit?: number } | null {
@@ -22,7 +22,7 @@ function getFirstQuantityOption(
   }
 
   const activeOptions = quantityOptions
-    .filter((opt) => opt.isActive && opt.quantity !== 1) // Skip quantity = 1
+    .filter((opt) => opt.isActive && opt.quantity !== 1)
     .sort((a, b) => a.quantity - b.quantity);
 
   if (activeOptions.length > 0) {
@@ -37,23 +37,22 @@ function getFirstQuantityOption(
 }
 
 // Helper function to get the minimum quantity from visible options
-// Returns the smallest quantity option (excluding quantity = 1) or 1 if no options
 function getMinimumQuantity(
   quantityOptions?: ProductVariant["quantityOptions"]
 ): number {
   if (!quantityOptions || quantityOptions.length === 0) {
-    return 1; // Default minimum
+    return 1;
   }
 
   const visibleOptions = quantityOptions
-    .filter((opt) => opt.isActive && opt.quantity !== 1) // Skip quantity = 1
+    .filter((opt) => opt.isActive && opt.quantity !== 1)
     .sort((a, b) => a.quantity - b.quantity);
 
   if (visibleOptions.length > 0) {
     return visibleOptions[0].quantity;
   }
 
-  return 1; // Default minimum if no visible options
+  return 1;
 }
 
 export function ProductPurchaseSection({
@@ -80,11 +79,8 @@ export function ProductPurchaseSection({
   const handleVariantChange = (variantId: string) => {
     const variant = product.variants?.find((v) => v.id === variantId);
     setSelectedVariant(variant);
-
-    // Reset quantity
     setQuantity(1);
 
-    // If variant has quantity options, auto-select the first/lowest one
     if (variant?.quantityOptions && variant.quantityOptions.length > 0) {
       const firstOption = getFirstQuantityOption(variant.quantityOptions);
       if (firstOption) {
@@ -93,14 +89,11 @@ export function ProductPurchaseSection({
         setSelectedQuantityOption(null);
       }
     } else {
-      // If variant has no quantity options, clear selection
       setSelectedQuantityOption(null);
     }
   };
 
   // Helper function to find the best matching quantity option
-  // Returns the largest quantity option that is <= the input quantity
-  // Skips quantity = 1 options (they're hidden from display but used for discount calculations)
   const findMatchingQuantityOption = (
     inputQuantity: number,
     quantityOptions?: ProductVariant["quantityOptions"]
@@ -109,12 +102,10 @@ export function ProductPurchaseSection({
       return null;
     }
 
-    // Filter active options (excluding quantity = 1) and sort by quantity descending
     const activeOptions = quantityOptions
-      .filter((opt) => opt.isActive && opt.quantity !== 1) // Skip quantity = 1
+      .filter((opt) => opt.isActive && opt.quantity !== 1)
       .sort((a, b) => b.quantity - a.quantity);
 
-    // Find the largest option that is <= input quantity
     const matchingOption = activeOptions.find(
       (opt) => opt.quantity <= inputQuantity
     );
@@ -129,7 +120,7 @@ export function ProductPurchaseSection({
     return null;
   };
 
-  // Calculate total quantity (quantity option base + additional quantity)
+  // Calculate total quantity
   const totalQuantity = useMemo(() => {
     if (selectedQuantityOption) {
       return selectedQuantityOption.quantity + (quantity - 1);
@@ -138,12 +129,10 @@ export function ProductPurchaseSection({
   }, [selectedQuantityOption, quantity]);
 
   // Calculate the final price per unit based on total quantity with pricing tiers
-  // Priority: quantity option price > pricing tiers > base price
   const calculatedPricePerUnit = useMemo(() => {
     const adjustedBasePrice =
       product.basePrice + (selectedVariant?.price_adjustment || 0);
 
-    // If quantity option has a specific pricePerUnit, use it (highest priority)
     if (
       selectedQuantityOption?.pricePerUnit !== undefined &&
       selectedQuantityOption.pricePerUnit > 0
@@ -151,7 +140,6 @@ export function ProductPurchaseSection({
       return selectedQuantityOption.pricePerUnit;
     }
 
-    // If pricing tiers exist, apply them based on total quantity
     if (product.pricingTiers && product.pricingTiers.length > 0) {
       return calculatePricePerUnit(
         totalQuantity,
@@ -161,7 +149,6 @@ export function ProductPurchaseSection({
       );
     }
 
-    // Fallback to base + variant adjustment
     return adjustedBasePrice;
   }, [
     product.basePrice,
@@ -172,15 +159,30 @@ export function ProductPurchaseSection({
   ]);
 
   return (
-    <div className="space-y-8 md:space-y-10 bg-white rounded-xl p-6 md:p-8 shadow-lg border border-gray-300">
+    <div className="space-y-6">
+      {/* Price Display */}
+      <div className="pb-6 border-b border-border/30">
+        <div className="flex items-baseline gap-3">
+          <span className="text-3xl font-bold text-foreground">
+            £{calculatedPricePerUnit.toFixed(2)}
+          </span>
+          {product.discount && Number(product.discount) > 0 && (
+            <span className="text-lg text-muted-foreground line-through">
+              £{((product.basePrice * 100) / (100 - Number(product.discount))).toFixed(2)}
+            </span>
+          )}
+        </div>
+        <p className="text-sm text-muted-foreground mt-1">
+          Tax included. Shipping calculated at checkout.
+        </p>
+      </div>
+
       {/* Variant Selector */}
       {product.variants && product.variants.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-emerald-700">
-              Select Size
-            </h3>
-          </div>
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-foreground">
+            Size
+          </h3>
           <VariantSelector
             variants={product.variants}
             label="Size"
@@ -189,40 +191,28 @@ export function ProductPurchaseSection({
         </div>
       )}
 
-      {/* Quantity Options Selector (only show if selected variant has quantity options) */}
+      {/* Quantity Options Selector */}
       {selectedVariant?.quantityOptions &&
         selectedVariant.quantityOptions.length > 0 && (
-          <div className="space-y-4" key={selectedVariant.id}>
+          <div className="space-y-3" key={selectedVariant.id}>
             <QuantityOptionsSelector
               quantityOptions={selectedVariant.quantityOptions}
               selectedQuantity={selectedQuantityOption?.quantity}
               onQuantityOptionChange={(qty, pricePerUnit) => {
                 setSelectedQuantityOption({ quantity: qty, pricePerUnit });
-                // Reset quantity selector to 1 when a new option is selected
-                // The total will be qty + (quantity - 1)
                 setQuantity(1);
               }}
               allowCustomQuantity={false}
             />
-            {/* Info text for auto-selection */}
-            {selectedVariant.quantityOptions.length > 0 && (
-              <p className="text-xs text-gray-500 italic">
-                Tip: Enter a custom quantity and we&apos;ll automatically select
-                the best pack size for you
-              </p>
-            )}
           </div>
         )}
 
       {/* Pricing Table */}
       {product.pricingTiers && product.pricingTiers.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="h-1 w-1 rounded-full bg-teal-500"></div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-teal-700">
-              Volume Pricing
-            </h3>
-          </div>
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-foreground">
+            Volume Pricing
+          </h3>
           <PricingTable
             tiers={product.pricingTiers}
             basePrice={product.basePrice}
@@ -232,13 +222,9 @@ export function ProductPurchaseSection({
       )}
 
       {/* Quantity Selector & Price Display */}
-      {/* Show quantity selector for all products, including those with quantity options */}
       <div className="space-y-4">
         {selectedVariant?.quantityOptions &&
-        selectedVariant.quantityOptions.length > 0 ? (
-          // Quantity selector for products with quantity options
-          // Auto-selects quantity option based on input
-          // Key prop ensures component remounts when variant changes, resetting quantity
+          selectedVariant.quantityOptions.length > 0 ? (
           (() => {
             const minQuantity = getMinimumQuantity(
               selectedVariant.quantityOptions
@@ -254,28 +240,22 @@ export function ProductPurchaseSection({
                 quantityOptionPrice={selectedQuantityOption?.pricePerUnit}
                 minQuantity={minQuantity}
                 onQuantityChange={(newTotalQuantity) => {
-                  // Enforce minimum quantity
                   const enforcedQuantity = Math.max(
                     minQuantity,
                     newTotalQuantity
                   );
 
-                  // Auto-select the best matching quantity option
                   const matchingOption = findMatchingQuantityOption(
                     enforcedQuantity,
                     selectedVariant.quantityOptions
                   );
 
                   if (matchingOption) {
-                    // If a matching option is found, select it
                     setSelectedQuantityOption(matchingOption);
-                    // Calculate additional quantity beyond the base option
                     const additionalQuantity =
                       enforcedQuantity - matchingOption.quantity;
                     setQuantity(Math.max(1, additionalQuantity + 1));
                   } else {
-                    // No matching option found, use direct quantity
-                    // This happens when input is less than the smallest option
                     setSelectedQuantityOption(null);
                     setQuantity(enforcedQuantity);
                   }
@@ -285,8 +265,6 @@ export function ProductPurchaseSection({
             );
           })()
         ) : (
-          // Standard quantity selector for products without quantity options
-          // Key prop ensures component remounts when variant changes, resetting quantity
           <QuantityPriceSelector
             key={`quantity-selector-${selectedVariant?.id || "no-variant"}`}
             pricingTiers={product.pricingTiers || []}
@@ -299,13 +277,33 @@ export function ProductPurchaseSection({
       </div>
 
       {/* Add to Cart Button */}
-      <div className="pt-4 border-t border-gray-300">
-        <AddToCartButton
-          product={product}
-          variant={selectedVariant}
-          quantity={totalQuantity}
-          quantityOptionPrice={calculatedPricePerUnit}
-        />
+      <AddToCartButton
+        product={product}
+        variant={selectedVariant}
+        quantity={totalQuantity}
+        quantityOptionPrice={calculatedPricePerUnit}
+      />
+
+      {/* Trust Badges */}
+      <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border/30">
+        <div className="flex flex-col items-center text-center gap-2">
+          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+            <Truck className="w-5 h-5 text-muted-foreground" />
+          </div>
+          <span className="text-xs text-muted-foreground font-medium">Fast Delivery</span>
+        </div>
+        <div className="flex flex-col items-center text-center gap-2">
+          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+            <ShieldCheck className="w-5 h-5 text-muted-foreground" />
+          </div>
+          <span className="text-xs text-muted-foreground font-medium">Secure Payment</span>
+        </div>
+        <div className="flex flex-col items-center text-center gap-2">
+          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+            <RotateCcw className="w-5 h-5 text-muted-foreground" />
+          </div>
+          <span className="text-xs text-muted-foreground font-medium">Easy Returns</span>
+        </div>
       </div>
     </div>
   );

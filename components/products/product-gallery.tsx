@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ProductGalleryProps {
   images: string[];
@@ -21,8 +22,8 @@ export function ProductGallery({
     images.length > 0
       ? images
       : [
-          "https://images.unsplash.com/photo-1680034977375-3d83ee017e52?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
-        ];
+        "https://images.unsplash.com/photo-1680034977375-3d83ee017e52?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=800",
+      ];
 
   // Get alt text for current image
   const getImageAlt = (index: number): string => {
@@ -35,64 +36,81 @@ export function ProductGallery({
     return `${productName} - Image ${index + 1}`;
   };
 
+  const goToPrevious = () => {
+    setSelectedImageIndex((prev) =>
+      prev === 0 ? displayImages.length - 1 : prev - 1
+    );
+  };
+
+  const goToNext = () => {
+    setSelectedImageIndex((prev) =>
+      prev === displayImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-4">
       {/* Main Image */}
       <div className="relative group">
-        <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-emerald-300 shadow-xl">
+        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-secondary/30 border border-border/30">
           <Image
             src={displayImages[selectedImageIndex]}
             alt={getImageAlt(selectedImageIndex)}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority={selectedImageIndex === 0}
-            loading={selectedImageIndex === 0 ? "eager" : "lazy"} // PERFORMANCE: Lazy load non-first images
+            loading={selectedImageIndex === 0 ? "eager" : "lazy"}
             placeholder="empty"
           />
         </div>
+
+        {/* Navigation Arrows - Only show if multiple images */}
+        {displayImages.length > 1 && (
+          <>
+            <button
+              onClick={goToPrevious}
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm border border-border/50 flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-110 shadow-lg"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={goToNext}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm border border-border/50 flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-110 shadow-lg"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </>
+        )}
       </div>
 
       {/* Thumbnail Images */}
       {displayImages.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
           {displayImages.map((image, index) => (
             <button
               key={index}
               onClick={() => setSelectedImageIndex(index)}
-              className={`relative h-20 w-20 m-2 md:h-24 cursor-pointer md:w-24 shrink-0 overflow-hidden rounded-md transition-all duration-300 ${
-                index === selectedImageIndex
-                  ? "ring-2 ring-emerald-500 scale-105 shadow-lg"
-                  : "ring-2 ring-emerald-200 opacity-60 hover:opacity-100 hover:ring-emerald-400 hover:scale-105"
-              }`}
+              className={`relative h-16 w-16 md:h-20 md:w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-300 ${index === selectedImageIndex
+                  ? "border-primary ring-2 ring-primary/20 shadow-md"
+                  : "border-border/30 opacity-70 hover:opacity-100 hover:border-border"
+                }`}
               aria-label={`View ${getImageAlt(index)}`}
             >
-              <div className="absolute inset-0 bg-linear-to-br from-emerald-50 to-teal-50"></div>
               <Image
                 src={image}
                 alt={`${getImageAlt(index)} - Thumbnail`}
                 fill
                 className="object-cover"
-                sizes="96px"
+                sizes="80px"
                 placeholder="empty"
-                loading="lazy" // PERFORMANCE: Lazy load thumbnail images (below the fold)
+                loading="lazy"
                 priority={false}
               />
-              {/* Active Indicator */}
-              {index === selectedImageIndex && (
-                <div className="absolute inset-0 border-2 border-white rounded-xl"></div>
-              )}
             </button>
           ))}
-        </div>
-      )}
-
-      {/* Image Counter */}
-      {displayImages.length > 1 && (
-        <div className="flex justify-center">
-          <span className="text-sm text-gray-600 font-medium">
-            {selectedImageIndex + 1} / {displayImages.length}
-          </span>
         </div>
       )}
     </div>

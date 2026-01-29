@@ -10,8 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-// import { Slider } from "@/components/ui/slider";
-import { X, SlidersHorizontal } from "lucide-react";
+import { X, SlidersHorizontal, ChevronDown } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -23,7 +22,6 @@ import {
   useMemo,
   useCallback,
   useState,
-  // useRef,
   useEffect,
   startTransition,
 } from "react";
@@ -81,7 +79,6 @@ function FilterContent({
   const [optimisticFilters, setOptimisticFilters] = useState<
     Record<string, string[]>
   >({});
-  // const priceDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const filters: FilterGroup[] = useMemo(() => {
     if (categories && categories.length > 0) {
@@ -168,22 +165,6 @@ function FilterContent({
     [searchParams, pathname, router, activeFilters]
   );
 
-  // const updatePriceRange = useCallback(
-  //   (values: number[]) => {
-  //     setLocalPriceRange(values);
-  //     if (priceDebounceRef.current) clearTimeout(priceDebounceRef.current);
-  //     priceDebounceRef.current = setTimeout(() => {
-  //       const params = new URLSearchParams(searchParams.toString());
-  //       params.set("priceMin", values[0].toString());
-  //       params.set("priceMax", values[1].toString());
-  //       startTransition(() => {
-  //         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  //       });
-  //     }, 120);
-  //   },
-  //   [searchParams, pathname, router]
-  // );
-
   const clearFilters = useCallback(() => {
     const params = new URLSearchParams();
     const sort = searchParams.get("sort");
@@ -210,17 +191,16 @@ function FilterContent({
   const activeCategoryParam = searchParams.get("category");
   const activeCategoryName = activeCategoryParam
     ? activeCategoryParam
-        .split("-")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ")
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ")
     : null;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-gray-900 flex items-center gap-3">
-          <div className="h-1 w-8 bg-linear-to-r from-emerald-600 to-teal-600 rounded-full"></div>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">
           Filters
         </h3>
         {hasActiveFilters && (
@@ -228,100 +208,76 @@ function FilterContent({
             variant="ghost"
             size="sm"
             onClick={clearFilters}
-            className="h-auto px-3 py-1.5 text-xs font-medium text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 rounded-md"
+            className="h-auto px-2 py-1 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/80"
           >
             Clear All
           </Button>
         )}
       </div>
 
-      {/* Active Category Badge */}
+      {/* Active Category Chip */}
       {activeCategoryName && (
-        <div className="mb-6 rounded-lg border border-emerald-200 bg-linear-to-r from-emerald-50 to-teal-50 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="mb-1 text-xs font-medium text-emerald-700 uppercase tracking-wider">
-                Browsing
-              </p>
-              <p className="text-sm font-semibold text-gray-900">
-                {activeCategoryName}
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                const params = new URLSearchParams(searchParams.toString());
-                params.delete("category");
-                startTransition(() => {
-                  router.replace(`/products?${params.toString()}`, {
-                    scroll: false,
-                  });
-                });
-              }}
-              className="text-emerald-600 transition-colors hover:text-emerald-700 hover:bg-emerald-100 rounded-full p-1.5"
-              title="Clear category"
-            >
-              <X className="h-4 w-4" strokeWidth={2} />
-            </button>
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-0.5">
+              Category
+            </p>
+            <p className="text-sm font-semibold text-foreground truncate">
+              {activeCategoryName}
+            </p>
           </div>
+          <button
+            onClick={() => {
+              const params = new URLSearchParams(searchParams.toString());
+              params.delete("category");
+              startTransition(() => {
+                router.replace(`/products?${params.toString()}`, {
+                  scroll: false,
+                });
+              });
+            }}
+            className="shrink-0 w-6 h-6 rounded-full bg-secondary hover:bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            title="Clear category"
+          >
+            <X className="h-3 w-3" />
+          </button>
         </div>
       )}
-
-      {/* Price Range */}
-      {/* <div className="space-y-4 border-t border-gray-200 pt-6">
-        <Label className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
-          Price Range
-        </Label>
-        <div className="space-y-4">
-          <Slider
-            value={localPriceRange}
-            min={0}
-            max={1000}
-            step={10}
-            onValueChange={updatePriceRange}
-            className="w-full"
-          />
-          <div className="flex items-center justify-between text-sm font-semibold text-gray-900">
-            <span>${localPriceRange[0]}</span>
-            <span>${localPriceRange[1]}</span>
-          </div>
-        </div>
-      </div> */}
 
       {/* Filter Accordions */}
       <Accordion
         type="multiple"
         defaultValue={filters.map((f) => f.key)}
-        className="w-full"
+        className="w-full space-y-2"
       >
         {filters.map((filter) => (
           <AccordionItem
             key={filter.key}
             value={filter.key}
-            className="border-t border-gray-200"
+            className="border border-border/50 rounded-lg px-4 bg-card data-[state=open]:bg-secondary/30"
           >
-            <AccordionTrigger className="py-4 text-sm font-semibold text-gray-900 hover:text-emerald-700 transition-colors">
+            <AccordionTrigger className="py-3 text-sm font-medium text-foreground hover:no-underline [&[data-state=open]>svg]:rotate-180">
               <div className="flex items-center gap-2">
                 <span>{filter.name}</span>
                 {activeFilters[filter.key] &&
                   activeFilters[filter.key].length > 0 && (
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-r from-emerald-600 to-teal-600 text-xs font-bold text-white shadow-sm">
+                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground px-1.5">
                       {activeFilters[filter.key].length}
                     </span>
                   )}
               </div>
             </AccordionTrigger>
-            <AccordionContent className="pb-4 pt-2">
-              <div className="space-y-3">
+            <AccordionContent className="pb-4 pt-1">
+              <div className="space-y-2.5">
                 {filter.options.map((option) => {
                   const isChecked =
                     optimisticFilters[filter.key]?.includes(option.value) ||
                     activeFilters[filter.key]?.includes(option.value) ||
                     false;
                   return (
-                    <div
+                    <label
                       key={option.value}
-                      className="flex items-center space-x-3 group"
+                      className="flex items-center gap-3 cursor-pointer group py-1"
                     >
                       <Checkbox
                         id={`${filter.key}-${option.value}`}
@@ -333,15 +289,12 @@ function FilterContent({
                             checked as boolean
                           )
                         }
-                        className="border-gray-300 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+                        className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                       />
-                      <Label
-                        htmlFor={`${filter.key}-${option.value}`}
-                        className="flex-1 cursor-pointer text-sm font-medium leading-none text-gray-700 group-hover:text-emerald-700 transition-colors"
-                      >
+                      <span className="flex-1 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                         {option.label}
-                      </Label>
-                    </div>
+                      </span>
+                    </label>
                   );
                 })}
               </div>
@@ -368,19 +321,21 @@ export function ProductFilters({
           <SheetTrigger asChild>
             <Button
               variant="outline"
-              className="w-full border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700"
+              className="w-full justify-between border-border bg-card text-sm font-medium text-foreground hover:bg-secondary"
             >
-              <SlidersHorizontal className="mr-2 h-4 w-4" strokeWidth={2} />
-              Filters
+              <span className="flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4" />
+                Filters
+              </span>
+              <ChevronDown className="h-4 w-4 opacity-50" />
             </Button>
           </SheetTrigger>
           <SheetContent
             side="left"
-            className="w-full overflow-y-auto sm:max-w-md bg-white border-gray-300"
+            className="w-full overflow-y-auto sm:max-w-sm bg-background"
           >
-            <SheetHeader className="mb-6">
-              <SheetTitle className="text-left text-xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="h-1 w-8 bg-linear-to-r from-emerald-600 to-teal-600 rounded-full"></div>
+            <SheetHeader className="mb-6 pb-4 border-b border-border">
+              <SheetTitle className="text-left text-lg font-semibold text-foreground">
                 Filter Products
               </SheetTitle>
             </SheetHeader>
@@ -394,7 +349,7 @@ export function ProductFilters({
 
       {/* Desktop Filters */}
       <aside className="sticky top-24 hidden h-fit lg:block">
-        <div className="rounded-xl border border-gray-300 bg-white p-6 shadow-lg">
+        <div className="rounded-xl border border-border/50 bg-card p-5">
           <FilterContent categories={categories} />
         </div>
       </aside>
