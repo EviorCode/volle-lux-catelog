@@ -51,7 +51,7 @@ const locationData: Record<string, {
     city: "Manchester",
     region: "Greater Manchester",
     metaTitle: "Packaging Supplies Manchester | Next-Day Delivery | Bubble Wrap Shop",
-    metaDescription: "Fast packaging delivery to Manchester. Next-day service from Blackburn, free delivery over £50, bulk discounts. Bubble wrap, boxes, mailing bags & more.",
+    metaDescription: "Fast packaging delivery to Manchester. Next-day service from Blackburn, free delivery, bulk discounts. Bubble wrap, boxes, mailing bags & more.",
     keywords: [
       "packaging supplies Manchester",
       "bubble wrap Manchester",
@@ -63,7 +63,7 @@ const locationData: Record<string, {
       "next day packaging Manchester"
     ],
     ogTitle: "Packaging Supplies Manchester | Next-Day Delivery",
-    ogDescription: "Fast packaging delivery to Manchester & Greater Manchester. Next-day from Blackburn, free delivery over £50. Bubble wrap, boxes & mailing bags.",
+    ogDescription: "Fast packaging delivery to Manchester & Greater Manchester. Next-day from Blackburn, free delivery. Bubble wrap, boxes & mailing bags.",
     areaServedPrimary: "Manchester"
   },
   london: {

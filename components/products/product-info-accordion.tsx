@@ -89,7 +89,7 @@ export function ProductInfoAccordion({
                     <Check className="w-4 h-4 text-primary shrink-0" />
                     <div>
                       <p className="text-xs font-semibold text-foreground">Free Shipping</p>
-                      <p className="text-[10px] text-muted-foreground">Orders over £100</p>
+                      <p className="text-[10px] text-muted-foreground">UK-wide delivery</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 p-3 bg-secondary/50 rounded-lg">

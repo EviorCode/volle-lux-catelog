@@ -61,7 +61,7 @@ const locations = [
     isPrimary: false,
     features: [
       "Next-day delivery guaranteed",
-      "Free delivery over £50",
+      "Free delivery available",
       "Morning delivery slots",
       "Business accounts"
     ],
@@ -274,7 +274,7 @@ export default function LocationsPage() {
               </div>
               <h3 className="font-semibold text-foreground mb-2">Free Delivery</h3>
               <p className="text-sm text-muted-foreground">
-                Free shipping on orders over £50 to mainland UK addresses
+                Free shipping to mainland UK addresses
               </p>
             </div>
 

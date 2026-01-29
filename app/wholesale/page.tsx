@@ -778,8 +778,7 @@ export default function WholesalePage() {
                       </h3>
                       <p className="text-gray-600 leading-relaxed">
                         Orders placed before 2pm ship the same day. Track your
-                        delivery in real-time. Free delivery on orders over
-                        £500.
+                        delivery in real-time with free UK mainland delivery.
                       </p>
                     </div>
                   </div>
