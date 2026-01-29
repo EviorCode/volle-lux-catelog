@@ -157,7 +157,7 @@ const PRODUCT_LISTING_QUERY = `
   }
 `;
 
-// Category query
+// Category query (including 2026 SEO fields)
 const CATEGORY_QUERY = `
   _id,
   _type,
@@ -179,9 +179,20 @@ const CATEGORY_QUERY = `
   },
   isActive,
   sortOrder,
+
+  // Basic SEO fields
   seoTitle,
   seoDescription,
-  seoKeywords
+  seoKeywords,
+
+  // 2026 AI & EEAT fields
+  llmSummary,
+  expertTip,
+  faqs[] {
+    question,
+    answer
+  },
+  useCases
 `;
 
 // All products query

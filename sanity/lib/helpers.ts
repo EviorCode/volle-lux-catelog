@@ -123,10 +123,20 @@ export interface SanityCategory {
   };
   isActive: boolean;
   sortOrder: number;
-  // SEO fields
+
+  // Basic SEO fields
   seoTitle?: string;
   seoDescription?: string;
   seoKeywords?: string[];
+
+  // 2026 AI & EEAT fields
+  llmSummary?: string;
+  expertTip?: string;
+  faqs?: Array<{
+    question: string;
+    answer: string;
+  }>;
+  useCases?: string[];
 }
 
 export interface SanityBanner {
@@ -309,10 +319,17 @@ export function transformSanityCategory(sanityCategory: SanityCategory) {
     imageAlt: categoryImageAlt,
     isActive: sanityCategory.isActive,
     sortOrder: sanityCategory.sortOrder,
-    // SEO fields
+
+    // Basic SEO fields
     seoTitle: sanityCategory.seoTitle,
     seoDescription: sanityCategory.seoDescription,
     seoKeywords: sanityCategory.seoKeywords,
+
+    // 2026 AI & EEAT fields
+    llmSummary: sanityCategory.llmSummary,
+    expertTip: sanityCategory.expertTip,
+    faqs: sanityCategory.faqs,
+    useCases: sanityCategory.useCases,
   };
 }
 

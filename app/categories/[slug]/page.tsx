@@ -20,6 +20,8 @@ import {
   Clock,
   CheckCircle2,
   ArrowRight,
+  Lightbulb,
+  Tag,
 } from "lucide-react";
 
 export const revalidate = false;
@@ -54,14 +56,16 @@ export async function generateMetadata({
   // Generate display name for fallback
   const displayName = category.name;
 
-  // Use custom SEO fields from Sanity, or generate defaults
+  // 2026 SEO: Use custom SEO fields or LLM summary from Sanity
   const seoTitle =
     category.seoTitle ||
-    `${displayName} UK | Buy Online | Bubble Wrap Shop`;
+    `${displayName} UK | Buy Online from Blackburn | Bubble Wrap Shop`;
 
+  // Use LLM summary if available (optimized for AI Overviews), then seoDescription, then generate
   const seoDescription =
     category.seoDescription ||
-    `Buy ${displayName.toLowerCase()} online UK. Premium packaging supplies with wholesale pricing. Next-day delivery from Blackburn to Manchester, London & UK-wide.`;
+    category.llmSummary ||
+    `Buy ${displayName.toLowerCase()} online from our Blackburn warehouse. Premium packaging with wholesale pricing. Next-day delivery to Manchester, London & UK-wide. Family-run since 2015.`;
 
   const pageUrl = `${siteUrl}/categories/${slug}`;
 
@@ -113,24 +117,42 @@ export default async function CategoryPage({
     (c: Category) => c.slug !== slug
   ).slice(0, 4) || [];
 
-  // CollectionPage structured data
+  // 2026 Enhanced CollectionPage structured data with LocalBusiness seller
   const collectionStructuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: category.name,
+    name: `${category.name} - Packaging Supplies UK`,
+    // Use LLM summary for better AI understanding
     description:
+      category.llmSummary ||
       category.description ||
-      `Browse our range of ${category.name} packaging supplies. Wholesale pricing available. Next day delivery across the UK.`,
+      `Buy ${category.name.toLowerCase()} online from Blackburn. Wholesale pricing, next-day UK delivery. Trusted packaging supplier since 2015.`,
     url: `${siteUrl}/categories/${slug}`,
     isPartOf: {
       "@type": "WebSite",
       name: "Bubble Wrap Shop",
       url: siteUrl,
     },
+    // 2026 SEO: LocalBusiness provider for local SEO boost
     provider: {
-      "@type": "Organization",
+      "@type": "LocalBusiness",
       name: "Bubble Wrap Shop",
       url: siteUrl,
+      telephone: "+44-7728-342335",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Unit BR16 Blakewater Road",
+        addressLocality: "Blackburn",
+        addressRegion: "Lancashire",
+        postalCode: "BB1 5QF",
+        addressCountry: "GB",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: "53.7488",
+        longitude: "-2.4883",
+      },
+      priceRange: "££",
     },
     mainEntity: {
       "@type": "ItemList",
@@ -205,8 +227,8 @@ export default async function CategoryPage({
     },
   ];
 
-  // FAQ items (can be made dynamic per category later)
-  const faqItems = [
+  // Default FAQ items (used as fallback if no Sanity FAQs)
+  const defaultFaqItems = [
     {
       question: `What ${category.name.toLowerCase()} sizes do you offer?`,
       answer: `We stock a comprehensive range of ${category.name.toLowerCase()} in various sizes to suit all packaging needs. Browse our selection above to find the perfect fit for your requirements.`,
@@ -225,21 +247,48 @@ export default async function CategoryPage({
     },
   ];
 
+  // Use Sanity FAQs if available, otherwise use defaults
+  const faqItems = category.faqs && category.faqs.length > 0
+    ? category.faqs
+    : defaultFaqItems;
+
+  // FAQPage schema for rich snippets (only if we have FAQs)
+  const faqStructuredData = faqItems.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  } : null;
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(collectionStructuredData),
-        }}
-      />
+      {/* Structured Data (JSON-LD) - 2026 SEO */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(breadcrumbStructuredData),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionStructuredData),
+        }}
+      />
+      {faqStructuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqStructuredData),
+          }}
+        />
+      )}
 
       {/* Hero Section with Gradient */}
       <div className="relative bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 overflow-hidden">
@@ -373,6 +422,62 @@ export default async function CategoryPage({
           </div>
         )}
       </div>
+
+      {/* 2026 EEAT: Expert Tip & Use Cases Section */}
+      {(category.expertTip || (category.useCases && category.useCases.length > 0)) && (
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-8 md:py-12 border-t border-border/50">
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Expert Tip */}
+            {category.expertTip && (
+              <div className="p-6 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-2xl">
+                <div className="flex gap-4">
+                  <div className="shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center">
+                      <Lightbulb className="w-5 h-5 text-amber-600" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-amber-900 dark:text-amber-100 mb-2">
+                      Expert Tip from Our Packaging Team
+                    </h3>
+                    <p className="text-sm text-amber-800 dark:text-amber-200 leading-relaxed">
+                      {category.expertTip}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Use Cases */}
+            {category.useCases && category.useCases.length > 0 && (
+              <div className="p-6 bg-secondary/50 border border-border rounded-2xl">
+                <div className="flex gap-4">
+                  <div className="shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                      <Tag className="w-5 h-5 text-emerald-600" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-foreground mb-3">
+                      Ideal For
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {category.useCases.map((useCase, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-3 py-1.5 bg-background text-foreground text-xs font-medium rounded-full border border-border"
+                        >
+                          {useCase}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Why Choose Us Section */}
       <div className="bg-gradient-to-b from-secondary/30 to-background py-16 md:py-20">
