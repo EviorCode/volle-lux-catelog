@@ -13,19 +13,21 @@ export const revalidate = false;
 const siteUrl = "https://bubblewrapshop.co.uk";
 
 // Default metadata for /products page (no category filter)
+// 2026 SEO: Include location (Blackburn), transactional intent, and trust signals
 const defaultMetadata = {
-  title: "All Packaging Supplies UK | Buy Online | Bubble Wrap Shop",
+  title: "Packaging Supplies UK | Wholesale from Blackburn | Bubble Wrap Shop",
   description:
-    "Browse our complete range of packaging supplies in the UK. Buy bubble wrap, cardboard boxes, packing tape, shipping boxes, and protective packaging materials online. Wholesale pricing. Next day delivery.",
+    "Buy packaging supplies online from our Blackburn warehouse. Bubble wrap, cardboard boxes, mailing bags & tape. Wholesale pricing, next-day UK delivery. Family-run since 2015.",
   keywords: [
     "packaging supplies UK",
-    "bubble wrap UK",
-    "cardboard boxes UK",
-    "packing tape UK",
-    "shipping boxes UK",
-    "protective packaging UK",
+    "bubble wrap Blackburn",
     "wholesale packaging UK",
-    "buy packaging online",
+    "cardboard boxes UK",
+    "mailing bags UK",
+    "packing tape UK",
+    "shipping supplies UK",
+    "buy packaging online UK",
+    "next day packaging delivery",
   ],
 };
 
@@ -162,25 +164,80 @@ export default async function ProductsPage({
 
   const searchQuery = sp.search?.trim();
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
+  const pageUrl = category ? `${siteUrl}/products?category=${category}` : `${siteUrl}/products`;
 
-  // CollectionPage structured data for better category indexing
+  // BreadcrumbList schema for rich snippets
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Products",
+        item: `${siteUrl}/products`,
+      },
+      ...(categoryDisplayName
+        ? [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: categoryDisplayName,
+              item: pageUrl,
+            },
+          ]
+        : []),
+    ],
+  };
+
+  // CollectionPage structured data with LocalBusiness seller context
   const collectionStructuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: categoryDisplayName || "All Packaging Supplies",
+    name: categoryDisplayName
+      ? `${categoryDisplayName} - Packaging Supplies UK`
+      : "All Packaging Supplies UK",
     description: category
-      ? `Browse our range of ${categoryDisplayName} packaging supplies. Wholesale pricing available. Next day delivery across the UK.`
-      : "Browse our complete catalog of packaging supplies including bubble wrap, cardboard boxes, packing tape, and protective packaging.",
-    url: category ? `${siteUrl}/products?category=${category}` : `${siteUrl}/products`,
+      ? `Buy ${categoryDisplayName?.toLowerCase()} online from Blackburn. Wholesale pricing, next-day UK delivery. Trusted packaging supplier since 2015.`
+      : "Browse our complete catalog of packaging supplies. Bubble wrap, cardboard boxes, mailing bags, and protective packaging shipped from Blackburn warehouse.",
+    url: pageUrl,
     isPartOf: {
       "@type": "WebSite",
       name: "Bubble Wrap Shop",
       url: siteUrl,
     },
+    // 2026 SEO: Add LocalBusiness seller context for local SEO boost
     provider: {
-      "@type": "Organization",
+      "@type": "LocalBusiness",
       name: "Bubble Wrap Shop",
       url: siteUrl,
+      telephone: "+44-7728-342335",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Unit BR16 Blakewater Road",
+        addressLocality: "Blackburn",
+        addressRegion: "Lancashire",
+        postalCode: "BB1 5QF",
+        addressCountry: "GB",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: "53.7488",
+        longitude: "-2.4883",
+      },
+      priceRange: "££",
+    },
+    // Offer catalog for product discovery
+    mainEntity: {
+      "@type": "OfferCatalog",
+      name: categoryDisplayName || "Packaging Supplies",
+      itemListOrder: "https://schema.org/ItemListUnordered",
     },
   };
 
@@ -194,7 +251,11 @@ export default async function ProductsPage({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* CollectionPage Structured Data */}
+      {/* Structured Data (JSON-LD) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionStructuredData) }}
@@ -222,19 +283,23 @@ export default async function ProductsPage({
       {/* Main Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-8 md:py-12">
 
-        {/* Header Section */}
+        {/* Header Section - 2026 SEO: Descriptive H1 with location context */}
         <div className="mb-8 md:mb-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-2">
+            <div className="space-y-3">
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
                 {searchQuery
                   ? `Results for "${searchQuery}"`
-                  : categoryDisplayName || "All Products"}
+                  : categoryDisplayName
+                    ? `${categoryDisplayName} - Buy Online UK`
+                    : "Packaging Supplies - Wholesale UK"}
               </h1>
-              <p className="text-muted-foreground text-sm md:text-base max-w-xl">
+              <p className="text-muted-foreground text-sm md:text-base max-w-2xl">
                 {searchQuery
-                  ? "Browse products matching your search"
-                  : "Premium eco-friendly packaging solutions with next-day delivery"}
+                  ? "Browse products matching your search from our Blackburn warehouse"
+                  : categoryDisplayName
+                    ? `Quality ${categoryDisplayName.toLowerCase()} shipped same-day from Blackburn. Wholesale pricing for businesses, next-day delivery UK-wide.`
+                    : "Premium packaging materials from our Blackburn warehouse. Bubble wrap, boxes, mailing bags & more. Family-run business with next-day UK delivery."}
               </p>
             </div>
 

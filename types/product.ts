@@ -21,6 +21,19 @@ export interface PricingTier {
   label?: string; // e.g., "Wholesale", "10% Off"
 }
 
+// Product FAQ for rich snippets
+export interface ProductFaq {
+  question: string;
+  answer: string;
+}
+
+// Product dimensions for schema markup
+export interface ProductDimensions {
+  length?: number; // cm
+  width?: number; // cm
+  height?: number; // cm
+}
+
 export interface Product {
   id: string;
   product_code: string;
@@ -39,7 +52,23 @@ export interface Product {
   pricingTiers?: PricingTier[]; // Tiered pricing for bulk orders
   specifications?: Record<string, string>; // Product specifications
   delivery?: string; // Delivery information
+
+  // Basic SEO fields
   seoTitle?: string; // Custom SEO title
   seoDescription?: string; // Custom SEO description
   seoKeywords?: string[]; // Custom SEO keywords (PRIMARY first, then SECONDARY)
+
+  // 2026 AI & EEAT fields
+  llmSummary?: string; // AI-optimized summary for SGE/AI Overviews
+  expertTip?: string; // EEAT expert advice
+  materialFeel?: string; // "Squeeze test" sensory description
+  useCases?: string[]; // Common use cases for entity saliency
+  faqs?: ProductFaq[]; // Product FAQs for rich snippets
+
+  // Google Shopping / Merchant fields
+  gtin?: string; // Global Trade Item Number (EAN/UPC)
+  mpn?: string; // Manufacturer Part Number
+  brand?: string; // Brand name (defaults to "Bubble Wrap Shop")
+  weight?: number; // Weight in kg
+  dimensions?: ProductDimensions; // Length, width, height in cm
 }

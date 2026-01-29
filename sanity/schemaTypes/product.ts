@@ -189,10 +189,12 @@ export const product = defineType({
       },
       description: "Tags for filtering and organization",
     }),
+    // === SEO FIELDS GROUP ===
     defineField({
       name: "seoTitle",
       title: "SEO Title",
       type: "string",
+      group: "seo",
       description:
         "Custom title for search engines (50-60 chars). Include PRIMARY keyword first.",
       validation: (Rule) => Rule.max(70),
@@ -202,6 +204,7 @@ export const product = defineType({
       title: "SEO Description",
       type: "text",
       rows: 2,
+      group: "seo",
       description:
         "Custom description for search engines (150-160 chars). Include PRIMARY + SECONDARY keywords naturally.",
       validation: (Rule) => Rule.max(170),
@@ -211,12 +214,139 @@ export const product = defineType({
       title: "SEO Keywords",
       type: "array",
       of: [{ type: "string" }],
+      group: "seo",
       options: {
         layout: "tags",
       },
       description:
         "Add 5-10 keywords. First 1-2 should be PRIMARY keywords, rest are SECONDARY.",
     }),
+
+    // === 2026 AI & EEAT FIELDS ===
+    defineField({
+      name: "llmSummary",
+      title: "AI Summary (LLM Optimized)",
+      type: "text",
+      rows: 3,
+      group: "seo",
+      description:
+        "2-3 sentence summary for AI Overviews. Include: what it is, who it's for, key benefit. Example: 'Heavy-duty bubble wrap rolls ideal for ecommerce sellers shipping fragile items. 100m length with large bubbles provides superior cushioning. Dispatched same-day from Blackburn warehouse.'",
+    }),
+    defineField({
+      name: "expertTip",
+      title: "Expert Tip (EEAT)",
+      type: "text",
+      rows: 2,
+      group: "seo",
+      description:
+        "Pro tip from packaging experts. Builds trust/authority. Example: 'Our packaging team recommends double-wrapping items over 5kg for maximum protection during transit.'",
+    }),
+    defineField({
+      name: "materialFeel",
+      title: "Material & Feel Description",
+      type: "text",
+      rows: 2,
+      group: "seo",
+      description:
+        "Describe texture, thickness, feel (helps AI understand physical properties). Example: 'Soft, pliable bubble wrap with 10mm air-filled bubbles.'",
+    }),
+    defineField({
+      name: "useCases",
+      title: "Common Use Cases",
+      type: "array",
+      of: [{ type: "string" }],
+      group: "seo",
+      options: {
+        layout: "tags",
+      },
+      description:
+        "3-5 specific use cases for entity linking. Example: 'Moving house', 'eBay seller packaging', 'Fragile gift wrapping'",
+    }),
+    defineField({
+      name: "faqs",
+      title: "Product FAQs",
+      type: "array",
+      group: "seo",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "question",
+              type: "string",
+              title: "Question",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "answer",
+              type: "text",
+              title: "Answer",
+              rows: 2,
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {
+              title: "question",
+            },
+          },
+        },
+      ],
+      description: "FAQs generate rich snippets in search results. Add 2-4 questions.",
+    }),
+
+    // === GOOGLE SHOPPING / MERCHANT FIELDS ===
+    defineField({
+      name: "gtin",
+      title: "GTIN/Barcode",
+      type: "string",
+      group: "merchant",
+      description: "Global Trade Item Number (EAN/UPC barcode). Required for Google Shopping.",
+    }),
+    defineField({
+      name: "mpn",
+      title: "MPN (Manufacturer Part Number)",
+      type: "string",
+      group: "merchant",
+      description: "Manufacturer's part number if applicable.",
+    }),
+    defineField({
+      name: "brand",
+      title: "Brand",
+      type: "string",
+      group: "merchant",
+      initialValue: "Bubble Wrap Shop",
+      description: "Product brand for Google Shopping. Defaults to 'Bubble Wrap Shop'.",
+    }),
+    defineField({
+      name: "weight",
+      title: "Weight (kg)",
+      type: "number",
+      group: "merchant",
+      description: "Product weight in kilograms for shipping calculations and schema.",
+    }),
+    defineField({
+      name: "dimensions",
+      title: "Dimensions",
+      type: "object",
+      group: "merchant",
+      fields: [
+        { name: "length", type: "number", title: "Length (cm)" },
+        { name: "width", type: "number", title: "Width (cm)" },
+        { name: "height", type: "number", title: "Height (cm)" },
+      ],
+      description: "Product dimensions in centimeters for schema markup.",
+    }),
+  ],
+  groups: [
+    {
+      name: "seo",
+      title: "SEO & AI Optimization",
+    },
+    {
+      name: "merchant",
+      title: "Google Shopping / Merchant",
+    },
   ],
   preview: {
     select: {

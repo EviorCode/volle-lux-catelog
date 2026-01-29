@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Lightbulb, Tag, HelpCircle } from "lucide-react";
 import { ProductGallerySkeleton } from "@/components/products/product-gallery-loader";
 import { RelatedProducts } from "@/components/products";
 import ProductPageContent from "@/components/products/product-page-content";
@@ -53,26 +53,29 @@ export async function generateMetadata({
   const productImage = product.images?.[0] || product.image;
   const productPrice = product.basePrice.toFixed(2);
 
-  // Use custom SEO fields if available, otherwise generate from product data
+  // 2026 SEO: Use LLM summary for AI Overviews, custom SEO fields, or generate optimized defaults
   const seoTitle =
-    product.seoTitle || `${product.name} | Buy Online UK | Bubble Wrap Shop`;
+    product.seoTitle ||
+    `${product.name} | Buy Online from Blackburn | Bubble Wrap Shop`;
 
+  // Use LLM summary if available (optimized for AI Overviews), then seoDescription, then generate
   const seoDescription =
     product.seoDescription ||
-    `Buy ${product.name} online. ${product.category || "Packaging supplies"} from £${productPrice}. Fast UK delivery, wholesale pricing, eco-friendly options. Order today!`;
+    product.llmSummary ||
+    `Buy ${product.name} online from our Blackburn warehouse. ${product.category || "Packaging supplies"} from £${productPrice}. Next-day UK delivery, wholesale pricing. Family-run since 2015.`;
 
   const productKeywords = product.seoKeywords?.length
     ? product.seoKeywords
     : [
-      product.name,
-      `${product.name} UK`,
-      product.category || "packaging",
-      `${product.category || "packaging"} UK`,
-      "packaging supplies UK",
-      "wholesale packaging",
-      "bulk packaging UK",
-      "buy online UK",
-    ];
+        product.name,
+        `${product.name} UK`,
+        `buy ${product.name?.toLowerCase()} online`,
+        product.category || "packaging",
+        `${product.category || "packaging"} Blackburn`,
+        "packaging supplies UK",
+        "wholesale packaging",
+        "next day delivery packaging",
+      ];
 
   return {
     title: seoTitle,
@@ -129,39 +132,182 @@ export default async function ProductPage({ params }: ProductPageProps) {
     process.env.NEXT_PUBLIC_APP_URL || "https://bubblewrapshop.co.uk";
   const productUrl = `${siteUrl}/products/${slug}`;
   const productPrice = product.basePrice.toFixed(2);
+  const priceValidUntil = new Date(
+    new Date().getTime() + 365 * 24 * 60 * 60 * 1000
+  )
+    .toISOString()
+    .split("T")[0];
 
-  // Structured Data (JSON-LD) for SEO
-  const structuredData = {
+  // BreadcrumbList Schema for rich snippets
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Products",
+        item: `${siteUrl}/products`,
+      },
+      ...(product.category && product.categorySlug
+        ? [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: product.category,
+              item: `${siteUrl}/categories/${product.categorySlug}`,
+            },
+            {
+              "@type": "ListItem",
+              position: 4,
+              name: product.name,
+              item: productUrl,
+            },
+          ]
+        : [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: product.name,
+              item: productUrl,
+            },
+          ]),
+    ],
+  };
+
+  // 2026 Enhanced Product Schema with GTIN, dimensions, LocalBusiness seller
+  const productStructuredData = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
+    // Use LLM summary for description if available (better for AI understanding)
     description:
-      product.description || `${product.name} - Premium packaging supplies`,
-    image: product.images || [product.image],
+      product.llmSummary ||
+      product.description ||
+      `${product.name} - Premium packaging supplies from Blackburn`,
+    image: product.images?.length ? product.images : [product.image],
     sku: product.product_code,
+    // Google Shopping identifiers
+    ...(product.gtin && { gtin: product.gtin }),
+    ...(product.mpn && { mpn: product.mpn }),
     brand: {
       "@type": "Brand",
-      name: "Bubble Wrap Shop",
+      name: product.brand || "Bubble Wrap Shop",
     },
+    // Product dimensions for shipping calculations
+    ...(product.weight && {
+      weight: {
+        "@type": "QuantitativeValue",
+        value: product.weight,
+        unitCode: "KGM",
+      },
+    }),
+    ...(product.dimensions && {
+      depth: product.dimensions.length
+        ? {
+            "@type": "QuantitativeValue",
+            value: product.dimensions.length,
+            unitCode: "CMT",
+          }
+        : undefined,
+      width: product.dimensions.width
+        ? {
+            "@type": "QuantitativeValue",
+            value: product.dimensions.width,
+            unitCode: "CMT",
+          }
+        : undefined,
+      height: product.dimensions.height
+        ? {
+            "@type": "QuantitativeValue",
+            value: product.dimensions.height,
+            unitCode: "CMT",
+          }
+        : undefined,
+    }),
+    // 2026: Material description for AI understanding ("squeeze test")
+    ...(product.materialFeel && { material: product.materialFeel }),
     offers: {
       "@type": "Offer",
       url: productUrl,
       priceCurrency: "GBP",
       price: productPrice,
-      priceValidUntil: new Date(
-        new Date().getTime() + 365 * 24 * 60 * 60 * 1000
-      )
-        .toISOString()
-        .split("T")[0],
+      priceValidUntil,
       availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
+      // LocalBusiness seller for local SEO boost
       seller: {
-        "@type": "Organization",
+        "@type": "LocalBusiness",
         name: "Bubble Wrap Shop",
+        url: siteUrl,
+        telephone: "+44-7728-342335",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "Unit BR16 Blakewater Road",
+          addressLocality: "Blackburn",
+          addressRegion: "Lancashire",
+          postalCode: "BB1 5QF",
+          addressCountry: "GB",
+        },
+      },
+      // Shipping details
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "GB",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            minValue: 0,
+            maxValue: 1,
+            unitCode: "DAY",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            minValue: 1,
+            maxValue: 2,
+            unitCode: "DAY",
+          },
+        },
+      },
+      // Return policy
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "GB",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 30,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
       },
     },
     category: product.category || "Packaging Supplies",
   };
+
+  // FAQ Schema if product has FAQs (generates rich snippets)
+  const faqStructuredData =
+    product.faqs && product.faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: product.faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        }
+      : null;
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -174,11 +320,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Structured Data (JSON-LD) */}
+      {/* Structured Data (JSON-LD) - 2026 SEO */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productStructuredData) }}
+      />
+      {faqStructuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+        />
+      )}
 
       {/* Breadcrumb Bar */}
       <div className="border-b border-border/30 bg-secondary/20">
@@ -231,8 +387,68 @@ export default async function ProductPage({ params }: ProductPageProps) {
               specifications={product.specifications}
               delivery={product.delivery}
             />
+
+            {/* 2026 EEAT: Expert Tip Section */}
+            {product.expertTip && (
+              <div className="mt-8 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl">
+                <div className="flex gap-3">
+                  <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-1">
+                      Expert Tip from Our Packaging Team
+                    </h3>
+                    <p className="text-sm text-amber-800 dark:text-amber-200">
+                      {product.expertTip}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 2026 Entity Saliency: Use Cases */}
+            {product.useCases && product.useCases.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <Tag className="w-4 h-4 text-muted-foreground" />
+                  Ideal For
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.useCases.map((useCase, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-3 py-1.5 bg-secondary text-secondary-foreground text-xs font-medium rounded-full"
+                    >
+                      {useCase}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* 2026 EEAT: Product FAQs Section (also generates rich snippets via schema) */}
+        {product.faqs && product.faqs.length > 0 && (
+          <section className="mt-12 md:mt-16 pt-8 border-t border-border/50">
+            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
+              <HelpCircle className="w-6 h-6 text-primary" />
+              Frequently Asked Questions
+            </h2>
+            <div className="space-y-4 max-w-3xl">
+              {product.faqs.map((faq, index) => (
+                <div
+                  key={index}
+                  className="p-4 bg-secondary/30 rounded-lg border border-border/30"
+                >
+                  <h3 className="text-sm font-semibold text-foreground mb-2">
+                    {faq.question}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">{faq.answer}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Related Products Section */}
         {relatedProducts.length > 0 && (

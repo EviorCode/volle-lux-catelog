@@ -16,10 +16,34 @@ export interface SanityProduct {
   isFeatured: boolean;
   isNewArrival: boolean;
   tags?: string[];
+  delivery?: string;
+
+  // Basic SEO fields
   seoTitle?: string;
   seoDescription?: string;
   seoKeywords?: string[];
-  delivery?: string;
+
+  // 2026 AI & EEAT fields
+  llmSummary?: string;
+  expertTip?: string;
+  materialFeel?: string;
+  useCases?: string[];
+  faqs?: Array<{
+    question: string;
+    answer: string;
+  }>;
+
+  // Google Shopping / Merchant fields
+  gtin?: string;
+  mpn?: string;
+  brand?: string;
+  weight?: number;
+  dimensions?: {
+    length?: number;
+    width?: number;
+    height?: number;
+  };
+
   category?: {
     _id: string;
     name: string;
@@ -247,9 +271,25 @@ export function transformSanityProduct(sanityProduct: SanityProduct) {
         {} as Record<string, string>
       ) || {},
     delivery: sanityProduct.delivery,
+
+    // Basic SEO fields
     seoTitle: sanityProduct.seoTitle,
     seoDescription: sanityProduct.seoDescription,
     seoKeywords: sanityProduct.seoKeywords,
+
+    // 2026 AI & EEAT fields
+    llmSummary: sanityProduct.llmSummary,
+    expertTip: sanityProduct.expertTip,
+    materialFeel: sanityProduct.materialFeel,
+    useCases: sanityProduct.useCases,
+    faqs: sanityProduct.faqs,
+
+    // Google Shopping / Merchant fields
+    gtin: sanityProduct.gtin,
+    mpn: sanityProduct.mpn,
+    brand: sanityProduct.brand || "Bubble Wrap Shop",
+    weight: sanityProduct.weight,
+    dimensions: sanityProduct.dimensions,
   };
 }
 

@@ -3,7 +3,7 @@
  * These queries fetch products, categories, and related data
  */
 
-// Base product query with all fields
+// Base product query with all fields (including 2026 SEO fields)
 const PRODUCT_QUERY = `
   _id,
   _type,
@@ -18,10 +18,34 @@ const PRODUCT_QUERY = `
   isFeatured,
   isNewArrival,
   tags,
+  delivery,
+
+  // Basic SEO fields
   seoTitle,
   seoDescription,
   seoKeywords,
-  delivery,
+
+  // 2026 AI & EEAT fields
+  llmSummary,
+  expertTip,
+  materialFeel,
+  useCases,
+  faqs[] {
+    question,
+    answer
+  },
+
+  // Google Shopping / Merchant fields
+  gtin,
+  mpn,
+  brand,
+  weight,
+  dimensions {
+    length,
+    width,
+    height
+  },
+
   category-> {
     _id,
     name,
