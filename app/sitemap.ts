@@ -19,49 +19,105 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseDate = new Date();
 
   // Static pages with optimized priorities and change frequencies
+  // Priority hierarchy: Homepage (1.0) > Product/Category listings (0.9) > Individual pages (0.8-0.6) > Legal (0.3)
   const staticPages: MetadataRoute.Sitemap = [
+    // Homepage - highest priority
     {
       url: siteUrl,
       lastModified: baseDate,
       changeFrequency: "daily",
       priority: 1.0,
     },
+    // Main shopping pages - very high priority (revenue-generating)
     {
       url: `${siteUrl}/products`,
       lastModified: baseDate,
       changeFrequency: "daily",
-      priority: 0.9,
+      priority: 0.95,
     },
     {
       url: `${siteUrl}/categories`,
       lastModified: baseDate,
       changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    // Business/conversion pages - high priority
+    {
+      url: `${siteUrl}/wholesale`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+    {
+      url: `${siteUrl}/b2b-request`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
       priority: 0.8,
     },
+    // Location pages - good for local SEO
+    {
+      url: `${siteUrl}/locations/blackburn`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.8, // HQ location
+    },
+    {
+      url: `${siteUrl}/locations/manchester`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
+    {
+      url: `${siteUrl}/locations/london`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
+    {
+      url: `${siteUrl}/locations`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    // Content pages - medium priority
+    {
+      url: `${siteUrl}/blogs`,
+      lastModified: baseDate,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/guides`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    // Support/info pages
     {
       url: `${siteUrl}/about`,
       lastModified: baseDate,
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.6,
     },
     {
       url: `${siteUrl}/contact`,
       lastModified: baseDate,
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.6,
     },
     {
       url: `${siteUrl}/faq`,
       lastModified: baseDate,
       changeFrequency: "monthly",
-      priority: 0.6,
+      priority: 0.5,
     },
     {
       url: `${siteUrl}/sustainability`,
       lastModified: baseDate,
       changeFrequency: "monthly",
-      priority: 0.6,
+      priority: 0.5,
     },
+    // Legal pages - low priority
     {
       url: `${siteUrl}/terms`,
       lastModified: baseDate,
@@ -79,55 +135,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: baseDate,
       changeFrequency: "yearly",
       priority: 0.3,
-    },
-    {
-      url: `${siteUrl}/b2b-request`,
-      lastModified: baseDate,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/wholesale`,
-      lastModified: baseDate,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/blogs`,
-      lastModified: baseDate,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/guides`,
-      lastModified: baseDate,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    // Location landing pages for local SEO
-    {
-      url: `${siteUrl}/locations`,
-      lastModified: baseDate,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/locations/blackburn`,
-      lastModified: baseDate,
-      changeFrequency: "monthly",
-      priority: 0.8, // Higher priority - HQ location
-    },
-    {
-      url: `${siteUrl}/locations/manchester`,
-      lastModified: baseDate,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/locations/london`,
-      lastModified: baseDate,
-      changeFrequency: "monthly",
-      priority: 0.7,
     },
   ];
 
@@ -148,7 +155,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ? new Date(product._updatedAt)
         : baseDate,
       changeFrequency: "weekly" as const,
-      priority: 0.8, // High priority for product pages
+      priority: 0.9, // Very high priority - revenue-generating pages
     }));
   } catch (error) {
     console.error("Error fetching products for sitemap:", error);
@@ -173,7 +180,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           ? new Date(category._updatedAt)
           : baseDate,
         changeFrequency: "weekly" as const,
-        priority: 0.7, // Medium-high priority for category pages
+        priority: 0.85, // High priority - category pages drive product discovery
       }));
     }
   } catch (error) {
@@ -205,7 +212,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
               ? new Date(guide.publishedAt)
               : baseDate,
         changeFrequency: "monthly" as const,
-        priority: 0.7, // Medium-high priority for buying guides
+        priority: 0.65, // Content pages - support SEO but not revenue-direct
       }));
     }
   } catch (error) {
@@ -219,25 +226,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${siteUrl}/guides/packaging-boxes-guide`,
       lastModified: baseDate,
       changeFrequency: "monthly" as const,
-      priority: 0.7,
+      priority: 0.65,
     },
     {
       url: `${siteUrl}/guides/bubble-wrap-guide`,
       lastModified: baseDate,
       changeFrequency: "monthly" as const,
-      priority: 0.7,
+      priority: 0.65,
     },
     {
       url: `${siteUrl}/guides/packing-tape-guide`,
       lastModified: baseDate,
       changeFrequency: "monthly" as const,
-      priority: 0.7,
+      priority: 0.65,
     },
     {
       url: `${siteUrl}/guides/protective-packaging-guide`,
       lastModified: baseDate,
       changeFrequency: "monthly" as const,
-      priority: 0.7,
+      priority: 0.65,
     },
   ];
 
@@ -246,6 +253,46 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const mergedGuidePages = [
     ...guidePages,
     ...staticGuidePages.filter((p) => !sanityGuideSlugs.has(p.url)),
+  ];
+
+  // Static blog fallback pages
+  const staticBlogPages: MetadataRoute.Sitemap = [
+    {
+      url: `${siteUrl}/blogs/how-to-choose-the-right-packaging-box`,
+      lastModified: new Date("2024-12-15"),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/blogs/bubble-wrap-vs-foam-which-is-better`,
+      lastModified: new Date("2024-12-10"),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/blogs/packaging-tips-for-fragile-items`,
+      lastModified: new Date("2024-12-05"),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/blogs/eco-friendly-packaging-alternatives`,
+      lastModified: new Date("2024-11-28"),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/blogs/how-to-calculate-packaging-costs`,
+      lastModified: new Date("2024-11-20"),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/blogs/cardboard-box-sizes-guide`,
+      lastModified: new Date("2024-11-15"),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    },
   ];
 
   // Fetch blog posts from Sanity
@@ -269,93 +316,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             ? new Date(post.publishedAt)
             : baseDate,
         changeFrequency: "monthly" as const,
-        priority: 0.7, // Medium-high priority for blog posts
+        priority: 0.6, // Content pages - support SEO
       }));
     }
   } catch (error) {
     console.error("Error fetching blog posts for sitemap:", error);
-    // Fall back to static blog pages if Sanity fetch fails
-    blogPages = [
-      {
-        url: `${siteUrl}/blogs/how-to-choose-the-right-packaging-box`,
-        lastModified: new Date("2024-12-15"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/bubble-wrap-vs-foam-which-is-better`,
-        lastModified: new Date("2024-12-10"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/packaging-tips-for-fragile-items`,
-        lastModified: new Date("2024-12-05"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/eco-friendly-packaging-alternatives`,
-        lastModified: new Date("2024-11-28"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/how-to-calculate-packaging-costs`,
-        lastModified: new Date("2024-11-20"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/cardboard-box-sizes-guide`,
-        lastModified: new Date("2024-11-15"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-    ];
+    // Continue with static fallback
   }
 
-  // If no blog posts from Sanity, use static fallback
-  if (blogPages.length === 0) {
-    blogPages = [
-      {
-        url: `${siteUrl}/blogs/how-to-choose-the-right-packaging-box`,
-        lastModified: new Date("2024-12-15"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/bubble-wrap-vs-foam-which-is-better`,
-        lastModified: new Date("2024-12-10"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/packaging-tips-for-fragile-items`,
-        lastModified: new Date("2024-12-05"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/eco-friendly-packaging-alternatives`,
-        lastModified: new Date("2024-11-28"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/how-to-calculate-packaging-costs`,
-        lastModified: new Date("2024-11-20"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        url: `${siteUrl}/blogs/cardboard-box-sizes-guide`,
-        lastModified: new Date("2024-11-15"),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      },
-    ];
-  }
+  // Merge blog pages, avoiding duplicates (Sanity takes precedence)
+  const sanityBlogSlugs = new Set(blogPages.map((p) => p.url));
+  const mergedBlogPages = [
+    ...blogPages,
+    ...staticBlogPages.filter((p) => !sanityBlogSlugs.has(p.url)),
+  ];
 
   // Combine all pages
   // Sort by priority (highest first) for better SEO
@@ -363,7 +337,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticPages,
     ...productPages,
     ...categoryPages,
-    ...blogPages,
+    ...mergedBlogPages,
     ...mergedGuidePages,
   ];
 
