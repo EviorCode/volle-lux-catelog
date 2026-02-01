@@ -35,6 +35,7 @@ export function ProductSort({ currentSort }: ProductSortProps) {
         <SelectTrigger
           id="sort"
           className="w-full sm:w-[180px] h-10 border-border/50 bg-card text-foreground text-sm font-medium focus:ring-1 focus:ring-primary/30 focus:border-primary/50"
+          aria-label="Sort Products"
         >
           <div className="flex items-center gap-2">
             <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />

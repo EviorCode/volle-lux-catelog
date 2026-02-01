@@ -63,7 +63,7 @@ export function ProductCard({ product }: ProductCardProps) {
               )}
             </div>
           ) : (
-            <span className="text-xs font-semibold text-primary uppercase tracking-wide">View Options</span>
+            <span className="text-xs font-semibold text-red-600 uppercase tracking-wide">View Options</span>
           )}
         </div>
 

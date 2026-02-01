@@ -37,13 +37,15 @@ const MOCK_CATEGORIES: Category[] = [
     id: "1",
     name: "Bubble Wrap",
     slug: "bubble-wrap",
-    image: "https://images.unsplash.com/photo-1586528116493-a029325540fa?w=400&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1586528116493-a029325540fa?w=400&auto=format&fit=crop",
   },
   {
     id: "2",
     name: "Mailing Bags",
     slug: "mailing-bags",
-    image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&auto=format&fit=crop",
   },
   {
     id: "3",
@@ -78,11 +80,14 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
   const [mounted, setMounted] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-  const isActiveLink = useCallback((href: string) => {
-    if (href === "/products") return pathname?.startsWith("/products");
-    if (href === "/categories") return pathname?.startsWith("/categories");
-    return pathname === href;
-  }, [pathname]);
+  const isActiveLink = useCallback(
+    (href: string) => {
+      if (href === "/products") return pathname?.startsWith("/products");
+      if (href === "/categories") return pathname?.startsWith("/categories");
+      return pathname === href;
+    },
+    [pathname],
+  );
 
   const { getItemCount } = useCartStore();
   const { user, isAuthenticated, signOut, loading: authLoading } = useAuth();
@@ -134,7 +139,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
         window.location.href = `/products?search=${encodeURIComponent(searchQuery)}`;
       }
     },
-    [searchQuery]
+    [searchQuery],
   );
 
   const handleMegaMenuEnter = useCallback(() => {
@@ -163,7 +168,10 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
           <div className="flex h-10 items-center justify-between text-sm">
             {/* Left - Contact & Delivery */}
             <div className="flex items-center gap-6">
-              <a href="tel:+447728342335" className="flex items-center gap-2 hover:text-emerald-400 transition-colors">
+              <a
+                href="tel:+447728342335"
+                className="flex items-center gap-2 hover:text-emerald-400 transition-colors"
+              >
                 <Phone className="h-3.5 w-3.5" />
                 <span>07728 342335</span>
               </a>
@@ -174,13 +182,22 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
             </div>
             {/* Right - Utility Links */}
             <div className="flex items-center gap-6">
-              <Link href="/wholesale" className="hover:text-emerald-400 transition-colors">
+              <Link
+                href="/wholesale"
+                className="hover:text-emerald-400 transition-colors"
+              >
                 Wholesale
               </Link>
-              <Link href="/b2b-request" className="hover:text-emerald-400 transition-colors">
+              <Link
+                href="/b2b-request"
+                className="hover:text-emerald-400 transition-colors"
+              >
                 B2B Enquiries
               </Link>
-              <Link href="/contact" className="hover:text-emerald-400 transition-colors">
+              <Link
+                href="/contact"
+                className="hover:text-emerald-400 transition-colors"
+              >
                 Contact Us
               </Link>
             </div>
@@ -197,15 +214,19 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
               <Image
                 src="/logo.jpg"
                 alt="Bubble Wrap Shop"
-                width={120}
-                height={40}
+                width={120} // Intrinsic width
+                height={40} // Intrinsic height
                 priority
-                className="h-9 lg:h-11 w-auto transition-opacity duration-200 group-hover:opacity-80"
+                // Added: aspect-[120/40] so the browser knows the ratio immediately
+                className="h-9 lg:h-11 w-auto aspect-[120/40] object-contain transition-opacity duration-200 group-hover:opacity-80"
               />
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
+            <nav
+              className="hidden lg:flex items-center gap-1"
+              aria-label="Main navigation"
+            >
               {/* Shop Dropdown */}
               <div
                 onMouseEnter={handleMegaMenuEnter}
@@ -276,8 +297,11 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
             </nav>
 
             {/* Search Bar - Desktop */}
-            <form onSubmit={handleSearch} className="hidden lg:block flex-1 max-w-md">
-              <div className={`relative transition-all duration-200 ${isSearchFocused ? "scale-[1.02]" : ""}`}>
+            <form
+              onSubmit={handleSearch}
+              className="hidden lg:block flex-1 max-w-md"
+            >
+              <div className={`relative transition-transform duration-200 ease-out ${isSearchFocused ? "scale-[1.02]" : ""}`}>
                 <Search
                   className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400"
                   strokeWidth={2}
@@ -408,7 +432,9 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
           onMouseEnter={handleMegaMenuEnter}
           onMouseLeave={handleMegaMenuLeave}
           className={`hidden lg:block absolute left-0 right-0 top-full bg-white border-b border-neutral-200 shadow-xl transition-all duration-300 ${
-            isMegaMenuOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"
+            isMegaMenuOpen
+              ? "opacity-100 visible translate-y-0"
+              : "opacity-0 invisible -translate-y-2"
           }`}
         >
           <div className="container mx-auto px-6 py-8">
@@ -526,8 +552,12 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                     <Truck className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="font-semibold">Free UK Delivery on Orders Over £75</p>
-                    <p className="text-sm text-white/80">Next-day delivery available on most items</p>
+                    <p className="font-semibold">
+                      Free UK Delivery on Orders Over £75
+                    </p>
+                    <p className="text-sm text-white/80">
+                      Next-day delivery available on most items
+                    </p>
                   </div>
                 </div>
                 <Link
@@ -634,7 +664,10 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
             )}
 
             {/* Navigation */}
-            <nav className="flex-1 overflow-y-auto p-4" aria-label="Mobile navigation">
+            <nav
+              className="flex-1 overflow-y-auto p-4"
+              aria-label="Mobile navigation"
+            >
               {/* Main Links */}
               <div className="space-y-1">
                 <Link
