@@ -112,7 +112,7 @@ export function QuantityOptionsSelector({
               >
                 {option.label}
                 {discountPercent !== null && discountPercent > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center bg-foreground text-background rounded-full px-1.5 py-0.5 min-w-5">
+                  <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center bg-red-500 text-white rounded-full px-1.5 py-0.5 min-w-5">
                     <span className="text-[10px] font-semibold leading-none">
                       -{discountPercent}%
                     </span>
