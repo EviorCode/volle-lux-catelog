@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, Leaf, Recycle, Sprout } from "lucide-react";
-import Image from "next/image";
 
 export function SustainabilityBlock() {
   return (
     <section className="relative w-full py-12 md:py-16 bg-gradient-to-r from-emerald-700 to-teal-700 overflow-hidden">
-      {/* Subtle texture overlay for premium feel */}
-      <div className="absolute inset-0 bg-[url('https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/noise.png')] opacity-10 mix-blend-overlay" />
 
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px]">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-16">
