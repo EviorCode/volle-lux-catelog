@@ -48,7 +48,7 @@ export type GuideCategory =
   | "business-tips";
 
 // Category labels for display
-export const GUIDE_CATEGORY_LABELS: Record<GuideCategory, string> = {
+const GUIDE_CATEGORY_LABELS: Record<GuideCategory, string> = {
   boxes: "Boxes",
   "protective-materials": "Protective Materials",
   "sealing-materials": "Sealing Materials",
@@ -153,18 +153,3 @@ export function formatGuideDate(dateString: string): string {
   });
 }
 
-// Normalize static guide to match GuideListing interface
-export function normalizeStaticGuide(guide: StaticGuide): GuideListing {
-  return {
-    id: guide.slug,
-    title: guide.title,
-    slug: guide.slug,
-    excerpt: guide.excerpt,
-    featuredImage: guide.featuredImage,
-    featuredImageAlt: `${guide.title} - packaging buying guide`,
-    category: guide.category.toLowerCase().replace(/ /g, "-"),
-    topics: guide.topics,
-    readTime: parseInt(guide.readTime) || 8,
-    author: "Bubble Wrap Shop Team",
-  };
-}

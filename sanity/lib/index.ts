@@ -28,14 +28,11 @@ export {
   // Blog functions
   getAllBlogPosts,
   getBlogPostBySlug,
-  getBlogPostsByCategory,
   getRelatedBlogPosts,
-  getRecentBlogPosts,
   getBlogPostSlugs,
   // Guide functions
   getAllGuides,
   getGuideBySlug,
-  getGuidesByCategory,
   getRelatedGuides,
   getGuideSlugs,
 } from "./api";

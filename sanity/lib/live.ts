@@ -14,7 +14,7 @@ import { token, browserToken } from "../env";
 // defineLive can only be used in React Server Components
 // This module should ONLY be imported in Server Components
 // WARNING: This will throw an error if imported in client components
-export const { sanityFetch, SanityLive } = defineLive({
+export const { SanityLive } = defineLive({
   client,
   serverToken: token || undefined, // Server-side live updates
   browserToken: browserToken ? browserToken : false, // Set to false to silence warning about Viewer rights

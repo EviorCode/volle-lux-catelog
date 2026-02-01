@@ -15,7 +15,7 @@ const galleryItems = [
         id: 2,
         type: "video" as const,
         src: "https://pub-20f982007aa54df4849bcd969b89a1bf.r2.dev/BubbleWrapShop/BUBBLEWRAP-ASSETS/WhatsApp%20Video%202026-01-23%20at%2011.56.20%20PM.mp4", // Placeholder path
-        thumbnail: "https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&q=80",
+        thumbnail: "",
         alt: "Warehouse tour video",
         title: "Facility Tour",
     },

@@ -1,15 +1,11 @@
 import type { NextConfig } from "next";
 
-// PERFORMANCE: Bundle analyzer for tracking bundle sizes
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-
 const nextConfig: NextConfig = {
   images: {
-    // Disable image optimization in development to avoid CDN timeout issues
     unoptimized: process.env.NODE_ENV === "development",
     remotePatterns: [
       {
@@ -31,25 +27,98 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
-    // Production image optimization settings
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 31536000,
   },
-  reactStrictMode:true,
-  // PERFORMANCE: Experimental features for better performance
+  reactStrictMode: true,
+
   experimental: {
-    // Optimize CSS loading to reduce render-blocking
-    optimizeCss: false,
-    // Optimize imports for large packages - tree-shakes unused exports
+    optimizeCss: true,
+    optimizeServerReact: true,
     optimizePackageImports: [
       "lucide-react",
       "date-fns",
       "@sanity/icons",
     ],
   },
+
+  // Removed webpack config - Turbopack handles it automatically
+
+  async headers() {
+    return [
+      {
+        source: "/videos/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/:all*(svg|jpg|jpeg|png|gif|ico|webp|mp4|webm|avif)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/:all*(woff|woff2|eot|ttf|otf)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/css/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Permissions-Policy",
+            value: "attribution-reporting=()",
+          },
+        ],
+      },
+    ];
+  },
+
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production" ? {
+      exclude: ["error", "warn"],
+    } : false,
+  },
 };
 
-// PERFORMANCE: Wrap config with bundle analyzer
 export default withBundleAnalyzer(nextConfig);

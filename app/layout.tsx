@@ -10,6 +10,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import FacebookPixel from "@/components/meta/FacebookPixel";
 import { CookieConsent } from "@/components/common";
+import { Suspense } from "react";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -158,7 +159,9 @@ export default async function RootLayout({
           <CartProvider>
             <WebsiteLayoutWrapper categories={categories || []}>
               {children}
-              <FacebookPixel />
+                 <Suspense fallback={null}> <FacebookPixel /></Suspense>
+             
+
             </WebsiteLayoutWrapper>
 
             {/* Cookie Consent Banner - GDPR Compliance */}

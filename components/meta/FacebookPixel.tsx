@@ -1,13 +1,15 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
 import { useEffect, useState } from "react";
 import * as pixel from "@/lib/meta/fpixel";
 
 const FacebookPixel = () => {
+  const [shouldLoad, setShouldLoad] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   // Don't render pixel in development
   if (process.env.NODE_ENV !== "production") {
@@ -19,20 +21,44 @@ const FacebookPixel = () => {
     return null;
   }
 
+  // PERFORMANCE: Delay Facebook Pixel loading to improve LCP
+  useEffect(() => {
+    // Load after 3 seconds OR on first user interaction
+    const timer = setTimeout(() => setShouldLoad(true), 3000);
+
+    const handleInteraction = () => {
+      setShouldLoad(true);
+      clearTimeout(timer);
+    };
+
+    // Load on first scroll, click, or touch
+    window.addEventListener("scroll", handleInteraction, { once: true });
+    window.addEventListener("click", handleInteraction, { once: true });
+    window.addEventListener("touchstart", handleInteraction, { once: true });
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("scroll", handleInteraction);
+      window.removeEventListener("click", handleInteraction);
+      window.removeEventListener("touchstart", handleInteraction);
+    };
+  }, []);
+
+  // Track pageviews on route change
   useEffect(() => {
     if (!loaded) return;
     pixel.pageview();
-  }, [pathname, loaded]);
+  }, [pathname, searchParams, loaded]);
+
+  // Don't render until we should load
+  if (!shouldLoad) return null;
 
   return (
     <>
       <Script
         id="fb-pixel"
-        src="/scripts/pixel.js"
-        strategy="afterInteractive"
+        strategy="lazyOnload" // Changed from afterInteractive
         onLoad={() => setLoaded(true)}
-        data-pixel-id={pixel.FB_PIXEL_ID}
-
         dangerouslySetInnerHTML={{
           __html: `
             !function(f,b,e,v,n,t,s)

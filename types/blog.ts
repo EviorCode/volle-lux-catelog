@@ -30,7 +30,7 @@ export type BlogCategory =
   | "how-to-guides";
 
 // Category labels for display
-export const BLOG_CATEGORY_LABELS: Record<BlogCategory, string> = {
+const BLOG_CATEGORY_LABELS: Record<BlogCategory, string> = {
   "packaging-tips": "Packaging Tips",
   "product-guides": "Product Guides",
   "buying-guides": "Buying Guides",

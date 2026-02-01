@@ -433,22 +433,7 @@ export async function getBlogPostBySlug(slug: string) {
   });
 }
 
-// Get blog posts by category
-export async function getBlogPostsByCategory(category: string) {
-  return safeQuery(async () => {
-    const fetchData = unstable_cache(
-      async () => {
-        return await client.fetch<SanityBlogPost[]>(BLOG_POSTS_BY_CATEGORY_QUERY, { category });
-      },
-      [`blog-posts-category-${category}`],
-      {
-        tags: [`blog:category:${category}`, 'blog:list'],
-      }
-    );
-    const posts = await fetchData();
-    return posts.map(transformSanityBlogPostListing);
-  });
-}
+
 
 // Get related blog posts (same category, excluding current)
 export async function getRelatedBlogPosts(category: string, currentSlug: string) {
@@ -470,22 +455,7 @@ export async function getRelatedBlogPosts(category: string, currentSlug: string)
   });
 }
 
-// Get recent blog posts (for homepage or sidebar)
-export async function getRecentBlogPosts(limit: number = 3) {
-  return safeQuery(async () => {
-    const fetchData = unstable_cache(
-      async () => {
-        return await client.fetch<SanityBlogPost[]>(RECENT_BLOG_POSTS_QUERY, { limit });
-      },
-      [`blog-posts-recent-${limit}`],
-      {
-        tags: ['blog:recent', 'blog:list'],
-      }
-    );
-    const posts = await fetchData();
-    return posts.map(transformSanityBlogPostListing);
-  });
-}
+
 
 // Get all blog post slugs (for static generation)
 export async function getBlogPostSlugs() {
@@ -535,22 +505,6 @@ export async function getGuideBySlug(slug: string) {
   });
 }
 
-// Get guides by category
-export async function getGuidesByCategory(category: string) {
-  return safeQuery(async () => {
-    const fetchData = unstable_cache(
-      async () => {
-        return await client.fetch<SanityGuide[]>(GUIDES_BY_CATEGORY_QUERY, { category });
-      },
-      [`guides-category-${category}`],
-      {
-        tags: [`guides:category:${category}`, 'guides:list'],
-      }
-    );
-    const guides = await fetchData();
-    return guides.map(transformSanityGuideListing);
-  });
-}
 
 // Get related guides (same category, excluding current)
 export async function getRelatedGuides(category: string, currentSlug: string) {
