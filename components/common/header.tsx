@@ -301,7 +301,8 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
               onSubmit={handleSearch}
               className="hidden lg:block flex-1 max-w-md"
             >
-              <div className={`relative transition-transform duration-200 ease-out ${isSearchFocused ? "scale-[1.02]" : ""}`}>
+              {/* Removed 'transition-transform' and 'scale' to prevent layout shift */}
+              <div className="relative">
                 <Search
                   className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400"
                   strokeWidth={2}
@@ -313,7 +314,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setIsSearchFocused(false)}
                   placeholder="Search products..."
-                  className="w-full rounded-full border border-neutral-200 bg-neutral-50 py-2.5 pl-11 pr-4 text-sm text-neutral-900 placeholder:text-neutral-500 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all duration-200"
+                  className="w-full rounded-full border border-neutral-200 bg-neutral-50 py-2.5 pl-11 pr-4 text-sm text-neutral-900 placeholder:text-neutral-500 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-colors duration-200"
                 />
               </div>
             </form>
