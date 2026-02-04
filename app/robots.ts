@@ -33,11 +33,6 @@ export default function robots(): MetadataRoute.Robots {
           // API and internal routes
           "/api/",
           "/studio/",
-
-          // Next.js internal files
-          "/_next/static/",
-          "/_next/image/",
-
           // Test and development pages
           "/test-supabase/",
         ],
