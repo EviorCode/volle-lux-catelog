@@ -459,6 +459,7 @@ export default async function LocationPage({ params }: Props) {
               <Link
                 href="/products"
                 className="inline-flex items-center justify-center gap-2 bg-white text-emerald-600 font-semibold px-6 py-3 rounded-xl hover:bg-emerald-50 transition-colors shadow-lg"
+                title="Shop Now"
               >
                 Shop Now
                 <ArrowRight className="w-5 h-5" />
@@ -467,6 +468,7 @@ export default async function LocationPage({ params }: Props) {
                 <Link
                   href="/contact"
                   className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/20 transition-colors border border-white/20"
+                  title="Call for Collection"
                 >
                   <Phone className="w-5 h-5" />
                   Call for Collection
@@ -475,6 +477,7 @@ export default async function LocationPage({ params }: Props) {
                 <Link
                   href="/b2b-request"
                   className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/20 transition-colors border border-white/20"
+                  title="Request Trade Quote"
                 >
                   <Building2 className="w-5 h-5" />
                   Request Trade Quote
@@ -626,6 +629,7 @@ export default async function LocationPage({ params }: Props) {
           <Link
             href="/products"
             className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-xl transition-colors shadow-lg"
+            title="View All Products"
           >
             View All Products
             <ArrowRight className="w-5 h-5" />
@@ -651,11 +655,13 @@ export default async function LocationPage({ params }: Props) {
                 key={category.id}
                 href={`/categories/${category.slug}`}
                 className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-secondary border border-border hover:border-emerald-300 transition-all hover:shadow-lg"
+                title={category.name}
               >
                 {category.image ? (
                   <Image
                     src={category.image}
                     alt={category.imageAlt || category.name}
+                    title={category.name}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 768px) 50vw, 25vw"
@@ -677,6 +683,7 @@ export default async function LocationPage({ params }: Props) {
             <Link
               href="/categories"
               className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+              title="View All Categories"
             >
               View All Categories
               <ArrowRight className="w-4 h-4" />
@@ -747,6 +754,7 @@ export default async function LocationPage({ params }: Props) {
             <Link
               href="/products"
               className="inline-flex items-center justify-center gap-2 bg-white text-emerald-600 font-semibold px-8 py-3.5 rounded-xl hover:bg-emerald-50 transition-colors shadow-lg"
+              title="Shop Now"
             >
               Shop Now
               <ArrowRight className="w-5 h-5" />
@@ -754,6 +762,7 @@ export default async function LocationPage({ params }: Props) {
             <Link
               href="/contact"
               className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-white/20 transition-colors border border-white/20"
+              title="Contact Us"
             >
               <Phone className="w-5 h-5" />
               Contact Us

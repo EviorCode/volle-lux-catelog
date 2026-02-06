@@ -273,7 +273,7 @@ function CheckoutPageContent() {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-12">
         <div className="mx-auto max-w-6xl">
           {/* Back Button */}
-          <Link href="/cart">
+          <Link href="/cart" title="Back to Cart">
             <Button
               variant="ghost"
               size="sm"
@@ -424,6 +424,7 @@ function CheckoutPageContent() {
                             <Link
                               href="/auth/login?redirect=/checkout"
                               className="text-emerald-600 hover:text-emerald-700 font-semibold underline"
+                              title="Sign In"
                             >
                               Sign in
                             </Link>{" "}

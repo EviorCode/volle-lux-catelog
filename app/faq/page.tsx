@@ -173,7 +173,7 @@ export default function FAQPage() {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-16 md:py-20 lg:py-24">
         <div className="mx-auto max-w-4xl">
           {/* Back Button */}
-          <Link href="/">
+          <Link href="/" title="Back to Home">
             <Button
               variant="ghost"
               size="sm"
@@ -252,6 +252,7 @@ export default function FAQPage() {
                   <Link
                     href="/contact"
                     className="inline-flex items-center gap-3 px-8 py-4 mt-4 text-base font-semibold border border-white/20 text-white bg-white/20 rounded-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                    title="Contact Us"
                   >
                     Contact Us
                     <ArrowRight

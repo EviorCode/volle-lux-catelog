@@ -957,6 +957,7 @@ const portableTextComponents: PortableTextComponents = {
           <Image
             src={value.asset?.url || "/images/placeholder.jpg"}
             alt={value.alt || "Guide image"}
+            title={value.alt || "Guide image"}
             fill
             className="object-cover"
           />
@@ -1371,6 +1372,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
           <Link
             href="/guides"
             className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm mb-8 transition-colors"
+            title="All Guides"
           >
             <ArrowLeft className="h-4 w-4" />
             All Guides
@@ -1439,6 +1441,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               <Image
                 src={featuredImage}
                 alt={featuredImageAlt}
+                title={title}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -1522,6 +1525,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
                 <Link
                   href="/products"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors whitespace-nowrap"
+                  title="Shop now"
                 >
                   Shop now
                   <ArrowRight className="h-4 w-4" />
@@ -1566,6 +1570,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
                         key={relatedGuide.id || relatedGuide.slug}
                         href={`/guides/${relatedGuide.slug}`}
                         className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group"
+                        title={relatedGuide.title}
                       >
                         <span className="text-xs text-emerald-600 font-medium">
                           {getGuideCategoryLabel(
@@ -1602,6 +1607,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors"
+                title="Contact us"
               >
                 Contact us
                 <ChevronRight className="h-4 w-4" />
@@ -1609,6 +1615,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               <Link
                 href="/guides"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-900 font-medium rounded-full border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                title="More guides"
               >
                 More guides
               </Link>

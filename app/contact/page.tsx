@@ -203,7 +203,7 @@ export default function ContactPage() {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-16 md:py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           {/* Back Button */}
-          <Link href="/">
+          <Link href="/" title="Back to Home">
             <Button
               variant="ghost"
               size="sm"
@@ -282,6 +282,7 @@ export default function ContactPage() {
                     <a
                       href="tel:01254916167"
                       className="block text-sm font-medium text-gray-700 hover:text-emerald-600 transition-colors mb-2"
+                      title="Call Bubble Wrap Shop"
                     >
                       01254 916167
                     </a>

@@ -689,6 +689,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <Link
             href="/blogs"
             className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-8 transition-colors"
+            title="Back to Blog"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Blog
@@ -825,6 +826,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     key={product.id}
                     href={`/products/${product.slug}`}
                     className="group flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                    title={product.name}
                   >
                     {product.image && (
                       <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-white flex-shrink-0">
@@ -905,6 +907,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   key={relatedPost.slug}
                   href={`/blogs/${relatedPost.slug}`}
                   className="group"
+                  title={relatedPost.title}
                 >
                   <article>
                     <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-gray-100 mb-4">
@@ -951,6 +954,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <Link
               href="/products"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors"
+              title="Browse our complete range of packaging supplies"
             >
               Browse products
               <ArrowRight className="h-4 w-4" />
@@ -958,6 +962,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <Link
               href="/blogs"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-900 font-medium rounded-full border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+              title="View all articles"
             >
               More articles
               <ChevronRight className="h-4 w-4" />

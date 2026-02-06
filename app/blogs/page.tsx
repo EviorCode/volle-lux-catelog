@@ -274,6 +274,7 @@ export default async function BlogPage() {
                         src={post.featuredImage}
                         alt={post.featuredImageAlt}
                         fill
+                        title={post.title}
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         loading={index < 2 ? "eager" : "lazy"}

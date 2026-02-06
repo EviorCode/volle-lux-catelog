@@ -192,13 +192,14 @@ export default async function GuidesPage() {
       {featuredGuide && (
         <section className="py-16 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-            <Link href={`/guides/${featuredGuide.slug}`} className="group block">
+            <Link href={`/guides/${featuredGuide.slug}`} className="group block" title={featuredGuide.title}>
               <article className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                 {/* Image */}
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100">
                   <Image
                     src={featuredGuide.featuredImage}
                     alt={featuredGuide.featuredImageAlt}
+                    title={featuredGuide.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -274,6 +275,7 @@ export default async function GuidesPage() {
                   key={guide.id}
                   href={`/guides/${guide.slug}`}
                   className="group"
+                  title={guide.title}
                 >
                   <article className="h-full">
                     {/* Image */}
@@ -281,6 +283,7 @@ export default async function GuidesPage() {
                       <Image
                         src={guide.featuredImage}
                         alt={guide.featuredImageAlt}
+                        title={guide.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -341,6 +344,7 @@ export default async function GuidesPage() {
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors"
+                title="Contact us for expert advice"
               >
                 Contact us
                 <ChevronRight className="h-4 w-4" />
@@ -348,6 +352,7 @@ export default async function GuidesPage() {
               <Link
                 href="/products"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-900 font-medium rounded-full border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                title="Browse our complete range of packaging supplies"
               >
                 Browse products
               </Link>

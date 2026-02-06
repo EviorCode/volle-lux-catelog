@@ -194,12 +194,14 @@ export default function LocationsPage() {
               key={location.slug}
               href={`/locations/${location.slug}`}
               className="group bg-background rounded-2xl border border-border overflow-hidden hover:border-emerald-500/50 hover:shadow-xl transition-all duration-300"
+              title={`${location.city} delivery coverage`}
             >
               {/* Image */}
               <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
                   src={location.image}
                   alt={`${location.city} delivery coverage`}
+                  title={`${location.city} delivery coverage`}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -311,6 +313,7 @@ export default function LocationsPage() {
             <Link
               href="/contact"
               className="inline-flex items-center justify-center gap-2 bg-white text-emerald-700 font-semibold px-8 py-4 rounded-xl hover:bg-emerald-50 transition-colors shadow-lg"
+              title="Contact Us"
             >
               Contact Us
               <ArrowRight className="w-5 h-5" />
@@ -318,6 +321,7 @@ export default function LocationsPage() {
             <Link
               href="/wholesale"
               className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/20 transition-colors border border-white/20"
+              title="Request Trade Quote"
             >
               Trade Accounts
             </Link>

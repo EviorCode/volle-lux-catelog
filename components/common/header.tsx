@@ -378,7 +378,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 </div>
               ) : isAuthenticated && user ? (
                 <div className="hidden lg:block relative group">
-                  <button className="p-2.5 text-neutral-600 hover:text-emerald-700 hover:bg-neutral-50 rounded-lg transition-all duration-200">
+                  <button className="p-2.5 text-neutral-600 hover:text-emerald-700 hover:bg-neutral-50 rounded-lg transition-all duration-200" title="View account options">
                     <User className="h-5 w-5" strokeWidth={1.5} />
                   </button>
                   <div className="absolute right-0 top-full pt-2 w-60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
@@ -431,6 +431,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                         <button
                           onClick={handleSignOut}
                           className="flex items-center gap-3 w-full rounded-lg px-3 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                          title="Sign out of your account"
                         >
                           <LogOut className="h-4 w-4" />
                           Sign Out
@@ -455,6 +456,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 <button
                   aria-label="View shopping cart"
                   className="relative p-2.5 text-neutral-600 hover:text-emerald-700 hover:bg-neutral-50 rounded-lg transition-all duration-200"
+                  title="View your shopping cart"
                 >
                   <ShoppingCart className="h-5 w-5" strokeWidth={1.5} />
                   {mounted && cartItemCount > 0 && (
@@ -470,6 +472,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                 aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2.5 lg:hidden text-neutral-600 hover:text-emerald-700 hover:bg-neutral-50 rounded-lg transition-all duration-200"
+                title="Toggle mobile menu"
               >
                 {isMobileMenuOpen ? (
                   <X className="h-6 w-6" strokeWidth={1.5} />
@@ -671,6 +674,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
               <button
                 onClick={closeMobileMenu}
                 className="p-2 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded-lg transition-colors"
+                title="Close mobile menu"
               >
                 <X className="h-6 w-6" strokeWidth={1.5} />
               </button>
@@ -947,6 +951,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
                           closeMobileMenu();
                         }}
                         className="flex items-center gap-3 w-full p-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors"
+                        title="Sign out of your account"
                       >
                         <LogOut className="h-5 w-5" />
                         <span className="font-medium">Sign Out</span>
@@ -962,6 +967,7 @@ export function Header({ categories = MOCK_CATEGORIES }: HeaderProps) {
               <a
                 href="tel:+447728342335"
                 className="flex items-center justify-center gap-2 w-full p-3 text-emerald-700 font-medium"
+                title="Call us at 07728 342335"
               >
                 <Phone className="h-4 w-4" />
                 07728 342335

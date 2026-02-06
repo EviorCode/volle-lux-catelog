@@ -243,14 +243,14 @@ function CheckoutSuccessContent() {
                 asChild
                 className="inline-flex items-center gap-2 px-8 py-6 text-base font-semibold bg-linear-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:from-emerald-700 hover:to-teal-700"
               >
-                <Link href="/account/orders">View Orders</Link>
+                <Link href="/account/orders" title="View Orders">View Orders</Link>
               </Button>
               <Button
                 asChild
                 variant="outline"
                 className="inline-flex items-center gap-2 px-8 py-6 text-base font-semibold border-2 border-emerald-300 text-emerald-700 bg-white rounded-xl hover:bg-emerald-50 hover:border-emerald-600 transition-all duration-300 hover:scale-105"
               >
-                <Link href="/">Go Home</Link>
+                <Link href="/" title="Go Home">Go Home</Link>
               </Button>
             </div>
           </div>
@@ -485,7 +485,7 @@ function CheckoutSuccessContent() {
               size="lg"
               className="flex-1 inline-flex items-center gap-2 px-8 py-6 text-base font-semibold bg-linear-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:from-emerald-700 hover:to-teal-700"
             >
-              <Link href={`/account/orders/${orderData.id}`}>
+              <Link href={`/account/orders/${orderData.id}`} title="Track Order">
                 <Package className="h-5 w-5" strokeWidth={2} />
                 Track Order
               </Link>
@@ -496,7 +496,7 @@ function CheckoutSuccessContent() {
               size="lg"
               className="flex-1 inline-flex items-center gap-2 px-8 py-6 text-base font-semibold border-2 border-gray-300 text-gray-700 bg-white rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 hover:scale-105"
             >
-              <Link href="/products">
+              <Link href="/products" title="Continue Shopping">
                 <Home className="h-5 w-5" strokeWidth={2} />
                 Continue Shopping
               </Link>

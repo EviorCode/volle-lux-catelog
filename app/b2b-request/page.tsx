@@ -67,7 +67,7 @@ export default function B2BRequestPage() {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1600px] py-16 md:py-20 lg:py-24">
         <div className="mx-auto max-w-4xl">
           {/* Back Button */}
-          <Link href="/">
+          <Link href="/" title="Back to Home">
             <Button
               variant="ghost"
               size="sm"
@@ -140,6 +140,7 @@ export default function B2BRequestPage() {
                   <Link
                     href="/wholesale"
                     className="relative overflow-hidden inline-flex items-center gap-3 px-6 py-3 text-white font-semibold text-white bg-emerald-600 rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-100"
+                    title="Visit Wholesale Page"
                   >
                     <span className="absolute inset-0 bg-emerald-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <span className="relative">Visit Wholesale Page</span>
@@ -210,6 +211,7 @@ export default function B2BRequestPage() {
               <Link
                 href="/contact"
                 className="text-emerald-800 hover:text-emerald-700 font-semibold underline"
+                title="Contact Bubble Wrap Shop"
               >
                 Contact our sales team
               </Link>{" "}
@@ -217,6 +219,7 @@ export default function B2BRequestPage() {
               <a
                 href="tel:01254916167"
                 className="text-emerald-800 hover:text-emerald-700 font-semibold"
+                title="Call Bubble Wrap Shop"
               >
                 01254 916167
               </a>

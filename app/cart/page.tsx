@@ -33,6 +33,7 @@ function CartPageContent() {
           <Link
             href="/products"
             className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors group"
+            title="Continue Shopping"
           >
             <ArrowLeft
               className="h-4 w-4 transition-transform group-hover:-translate-x-1"
@@ -62,6 +63,7 @@ function CartPageContent() {
                   <Link
                     href="/auth/login?redirect=/cart"
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg"
+                    title="Sign In"
                   >
                     <LogIn className="h-4 w-4" />
                     Sign In
@@ -69,6 +71,7 @@ function CartPageContent() {
                   <Link
                     href="/auth/signup?redirect=/cart"
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 text-emerald-600 font-semibold rounded-lg border-2 border-emerald-600 transition-all duration-200 hover:shadow-lg"
+                    title="Create Account"
                   >
                     <UserPlus className="h-4 w-4" />
                     Create Account
@@ -96,7 +99,7 @@ function CartPageContent() {
               size="lg"
               className="bg-linear-to-r mt-1 from-emerald-600 to-teal-600 text-white hover:shadow-lg transition-all duration-300 hover:scale-105"
             >
-              <Link href="/products" className="flex items-center gap-2">
+              <Link href="/products" className="flex items-center gap-2" title="Browse Products">
                 <Leaf className="h-5 w-5" />
                 Browse Products
               </Link>
@@ -129,7 +132,7 @@ function CartPageContent() {
                   size="lg"
                   className="mt-6 w-full h-12 bg-linear-to-r from-emerald-600 to-teal-600 cursor-pointer text-white font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
                 >
-                  <Link href="/checkout">Proceed to Checkout</Link>
+                  <Link href="/checkout" title="Proceed to Checkout">Proceed to Checkout</Link>
                 </Button>
 
                 {/* Clear Cart Button */}

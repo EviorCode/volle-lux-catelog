@@ -19,12 +19,14 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link
       href={`/products/${product.slug}`}
       className="group flex flex-col gap-3 group-hover:cursor-pointer"
+      title={product.name}
     >
       {/* Image Container - Framer/Shopify Style */}
       <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-secondary/50 transition-colors duration-500 hover:bg-secondary/70">
         <Image
           src={product.image}
           alt={product.imageAlt || product.name}
+          title={product.name}
           width={500}
           height={500}
           className="h-full w-full object-contain p-6 mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-110"
