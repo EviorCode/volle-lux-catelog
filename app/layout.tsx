@@ -104,7 +104,7 @@ export default async function RootLayout({
 }>) {
   const categories = await getAllCategories();
   // remove this later 
-  return null;
+  // return null;
   return (
     <html
       lang="en"
