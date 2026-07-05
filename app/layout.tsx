@@ -103,7 +103,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const categories = await getAllCategories();
-
+  // remove this later 
+  return null;
   return (
     <html
       lang="en"
