@@ -104,7 +104,7 @@ export default async function RootLayout({
 }>) {
   const categories = await getAllCategories();
   // remove this later 
-  return <p>404 Something wrong</p>;
+  return <p>400 Bad Request</p>;
   return (
     <html
       lang="en"
