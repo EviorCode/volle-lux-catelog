@@ -103,8 +103,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const categories = await getAllCategories();
-  // remove this later 
-  return <p>400 Bad Request</p>;
   return (
     <html
       lang="en"
